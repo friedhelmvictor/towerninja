@@ -4,7 +4,7 @@ import processing.core.PApplet;
 public class Main extends PApplet {
 
 	/**
-	 * 
+	 * test
 	 */
 	private static final long serialVersionUID = 1L;
 	Game game;
