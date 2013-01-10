@@ -3,6 +3,10 @@ import processing.core.PApplet;
 
 public class Main extends PApplet {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	Game game;
 	
 	public void setup() {
