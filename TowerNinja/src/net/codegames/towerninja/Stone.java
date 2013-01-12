@@ -1,11 +1,15 @@
 package net.codegames.towerninja;
 
-public interface Stone {
+import processing.core.PGraphics;
 
-	public double speed = 10;
-	public double x = 0;
-	public double y = 0;
-	
-	// pluspunkte
-	// minuspunkte
+public class Stone {
+
+	private float xLocation, yLocation;
+	private float width = 100;
+	private float height = 20;
+
+	public Stone(float xLocation, float yLocation) {
+		this.xLocation = xLocation;
+		this.yLocation = yLocation;
+	}
 }
