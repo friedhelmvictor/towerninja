@@ -26,8 +26,8 @@ public class Game {
 	}
 
 	private void createStone() {
-		towerHeightLoop: for (int i = 0; i <= tower.length; i++) {
-			for (int j = 0; j <= tower[0].length; j++) {
+		towerHeightLoop: for (int i = 0; i < tower.length; i++) {
+			for (int j = 0; j < tower[0].length; j++) {
 				if (tower[i][j] == null) {
 					tower[i][j] = new Stone(50, 5);
 					break towerHeightLoop;
