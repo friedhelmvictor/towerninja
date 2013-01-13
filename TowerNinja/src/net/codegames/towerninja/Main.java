@@ -1,6 +1,7 @@
 package net.codegames.towerninja;
 
 import processing.core.PApplet;
+import SimpleOpenNI.SimpleOpenNI;
 
 public class Main extends PApplet {
 
@@ -10,15 +11,16 @@ public class Main extends PApplet {
 	 * Object should take care of things.
 	 */
 	private static final long serialVersionUID = 1L;
-	private static final int width = 640;
-	private static final int height = 480;
+	private int width = 640;
+	private int height = 480;
 	private Game game;
-	private Players players;
+	private Tracking tracking;
 	private boolean devMode = true;
 	
+	private SimpleOpenNI soni;
 
 	/**
-	 * Initial setup of the Applet. Also creating the {@link Game} object
+	 * Initial setup of the Applet. Also creating the {@link Game} and {@link Tracking} object.
 	 * 
 	 * @see processing.core.PApplet#setup()
 	 */
@@ -26,8 +28,11 @@ public class Main extends PApplet {
 		
 		size(width, height);
 		frameRate(30);
-		game = new Game();
-		//players = new Players(this);
+		
+		game = new Game(this);
+		
+		soni = new SimpleOpenNI(this);
+		tracking = new Tracking(this, soni);
 		
 	}
 
@@ -38,7 +43,7 @@ public class Main extends PApplet {
 	 */
 	public void draw() {
 		background(128);
-		game.update();
+		game.update(tracking.getPlayers());
 		
 		if (devMode) {
 			fill(255);
@@ -47,6 +52,27 @@ public class Main extends PApplet {
 		}
 	}
 
+	/**
+	 * callback for SimpleOpenNI's automatic user calibration
+	 * 
+	 * @param userId
+	 */
+	public void onNewUser(int userId) {
+		soni.requestCalibrationSkeleton(userId, true);
+	}
+	
+	/**
+	 * callback for SimpleOpenNI's automatic user tracking
+	 * 
+	 * @param userId
+	 * @param successfull
+	 */
+	public void onEndCalibration(int userId, boolean successfull) {
+		if (successfull) {
+			soni.startTrackingSkeleton(userId);
+		}
+	}
+	
 	public static void main(String[] args) {
 		PApplet.main(new String[] { "net.codegames.towerninja.Main" });
 	}

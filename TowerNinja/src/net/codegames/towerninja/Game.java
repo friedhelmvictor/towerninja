@@ -1,5 +1,10 @@
 package net.codegames.towerninja;
 
+import java.util.HashMap;
+import java.util.List;
+
+import processing.core.PApplet;
+
 //kennt alle steine
 // kennt Turm
 
@@ -10,6 +15,8 @@ package net.codegames.towerninja;
  *         allows creating new stones for free spots within the tower.
  */
 public class Game {
+	
+	PApplet applet;
 
 	/**
 	 * A tower represented by a 2-dimensional array. the first dimension
@@ -18,11 +25,24 @@ public class Game {
 	 * position already. It will fly towards that position though.
 	 */
 	private Stone[][] tower = new Stone[4][10];
+	
+	public Game(PApplet p) {
+		applet = p;
+	}
 
-	public void update() {
-		createStone();
+	public void update(List<HashMap<Character, Float>> players) {
+		// createStone();
 		// steine erzeugen
 		// steine bewegen
+		
+		// display right hand
+		applet.fill(255, 0, 0);
+		applet.ellipseMode(applet.CENTER);
+		for (int i = 0; i < players.size(); i++) {
+			float x = players.get(i).get('x');
+			float y = players.get(i).get('y');
+			applet.ellipse(x, y, 20, 20);
+		}
 	}
 
 	private void createStone() {
