@@ -70,5 +70,10 @@ public class Player {
 	public float getRightSpeed() {
 		return rightSpeed;
 	}
+	
+	public void updateSpeed() {
+		leftSpeed = (float)Math.sqrt(Math.pow(leftX - lastLeftX, 2) + Math.pow(leftY - lastLeftY, 2));
+		rightSpeed = (float)Math.sqrt(Math.pow(rightX - lastRightX, 2) + Math.pow(rightY - lastRightY, 2));
+	}
 
 }

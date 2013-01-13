@@ -19,7 +19,8 @@ public class Tracking {
 
 	private SimpleOpenNI soni;
 	private Vector<Integer> actualUsers = new Vector<Integer>();
-	List<HashMap<Character, Float>> players = new ArrayList<HashMap<Character, Float>>();
+	List<HashMap<Character, Float>> playerss = new ArrayList<HashMap<Character, Float>>();
+	Vector<Player> players = new Vector<Player>();
 
 	/**
 	 * Initializes Player Tracking with the Main applet and SimpleOpenNi.
@@ -68,13 +69,96 @@ public class Tracking {
 	}
 	
 	/**
+	 * Updates the players vector for the current users tracked by the 3D camera.
+	 */
+	private void updatePlayers() {
+		
+		Vector<Integer> currentUsers = new Vector<Integer>();
+		updateUsers();
+		
+		// first loop for all user already stored as players
+		for (int p = 0; p < players.size(); p++) {
+			for (int u = 0; u < actualUsers.size(); u++) {
+				if (players.get(p).getUserId() == actualUsers.get(u)) {
+					
+					int userId = players.get(p).getUserId();
+					
+					PVector spatial = new PVector();
+					PVector projection = new PVector();
+					
+					soni.getJointPositionSkeleton(userId, SimpleOpenNI.SKEL_LEFT_HAND, spatial);
+					soni.convertRealWorldToProjective(spatial, projection);
+					players.get(p).setLeftX(projection.x);
+					players.get(p).setLeftY(projection.y);
+					
+					soni.getJointPositionSkeleton(userId, SimpleOpenNI.SKEL_RIGHT_HAND, spatial);
+					soni.convertRealWorldToProjective(spatial, projection);
+					players.get(p).setRightX(projection.x);
+					players.get(p).setRightY(projection.y);
+					
+					players.get(p).updateSpeed();
+					
+					// remove handled user from actualUsers for second loop
+					actualUsers.remove(u);
+					
+					// save userID for third loop
+					currentUsers.add(userId);
+				}
+			}
+		}
+		
+		// second loop for all new users not yet stored as players
+		for (int u = 0; u < actualUsers.size(); u++) {
+			
+			int userId = actualUsers.get(u);
+			Player player = new Player(userId);
+						
+			PVector spatial = new PVector();
+			PVector projection = new PVector();
+			
+			soni.getJointPositionSkeleton(userId, SimpleOpenNI.SKEL_LEFT_HAND, spatial);
+			soni.convertRealWorldToProjective(spatial, projection);
+			player.setLeftX(projection.x);
+			player.setLeftY(projection.y);
+			
+			soni.getJointPositionSkeleton(userId, SimpleOpenNI.SKEL_RIGHT_HAND, spatial);
+			soni.convertRealWorldToProjective(spatial, projection);
+			player.setRightX(projection.x);
+			player.setRightY(projection.y);
+			
+			players.add(player);
+			
+			// remove handled user from actualUsers
+			actualUsers.remove(u);
+			
+			// save userID for third loop
+			currentUsers.add(userId);
+		}
+		
+		// third loop to remove all untracked players
+		for (int p = 0; p < players.size(); p++) {
+			boolean delete = true;
+			for (int i = 0; i < currentUsers.size(); i++) {
+				if (players.get(p).getUserId() == currentUsers.get(i)) {
+					delete = false;
+				}
+			}
+			if (delete) {
+				players.remove(p);
+			}
+		}
+		
+	}
+	
+	/**
 	 * Returns a Vector of all Players including their IDs and hand positions.
 	 * 
 	 * @return Vector of Player objects
 	 * @see    Player
 	 */
-	public List<HashMap<Character, Float>> getPlayers() {
+	public Vector<Player> getPlayers() {
 		
+		/*
 		updateUsers();
 		players.clear();
 		
@@ -92,9 +176,11 @@ public class Tracking {
 			map.put('i', 1.0f * userId);
 			map.put('x', right2d.x);
 			map.put('y', right2d.y);
-			players.add(map);
+			playerss.add(map);
 		}
+		*/
 		
+		updatePlayers();
 		return  players;
 	}
 	

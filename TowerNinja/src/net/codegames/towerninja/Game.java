@@ -1,11 +1,10 @@
 package net.codegames.towerninja;
 
-import java.util.HashMap;
-import java.util.List;
+import java.util.Vector;
 
 import processing.core.PApplet;
 
-//kennt alle steine
+// kennt alle steine
 // kennt Turm
 
 /**
@@ -30,18 +29,30 @@ public class Game {
 		applet = p;
 	}
 
-	public void update(List<HashMap<Character, Float>> players) {
+	public void update(Vector<Player> players) {
+		
 		// createStone();
 		// steine erzeugen
 		// steine bewegen
 		
-		// display right hand
-		applet.fill(255, 0, 0);
+		// display left hand
 		applet.ellipseMode(applet.CENTER);
 		for (int i = 0; i < players.size(); i++) {
-			float x = players.get(i).get('x');
-			float y = players.get(i).get('y');
+			float x = players.get(i).getLeftX();
+			float y = players.get(i).getLeftY();
+			applet.fill(255, 0, 0);
 			applet.ellipse(x, y, 20, 20);
+			applet.fill(0);
+			applet.text(players.get(i).getUserId(), x, y);
+		}
+		// display right hand
+		for (int i = 0; i < players.size(); i++) {
+			float x = players.get(i).getRightX();
+			float y = players.get(i).getRightY();
+			applet.fill(0, 255, 0);
+			applet.ellipse(x, y, 20, 20);
+			applet.fill(0);
+			applet.text(players.get(i).getUserId(), x, y);
 		}
 	}
 
