@@ -53,7 +53,7 @@ public class Main extends PApplet {
 	}
 
 	/**
-	 * callback for SimpleOpenNI's automatic user calibration
+	 * Callback for SimpleOpenNI's automatic user calibration.
 	 * 
 	 * @param userId
 	 */
@@ -62,7 +62,7 @@ public class Main extends PApplet {
 	}
 	
 	/**
-	 * callback for SimpleOpenNI's automatic user tracking
+	 * Callback for SimpleOpenNI's automatic user tracking.
 	 * 
 	 * @param userId
 	 * @param successfull

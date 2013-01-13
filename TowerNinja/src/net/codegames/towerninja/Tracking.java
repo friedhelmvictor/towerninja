@@ -11,7 +11,7 @@ import SimpleOpenNI.SimpleOpenNI;
 
 /**
  * Provides constantly a list of all users currently tracked by the 3D camera.
- * Data is returned as a vector of {@link Player}.
+ * Data is returned as a vector of {@link Player}s.
  * 
  * @author Frido
  */
@@ -24,7 +24,7 @@ public class Tracking {
 	/**
 	 * Initializes Player Tracking with the Main applet and SimpleOpenNi.
 	 * 
-	 * @param applet Main instance
+	 * @param applet <code>Main</code> instance
 	 * @param soni   SimpleOpenNI object
 	 */
 	public Tracking(PApplet applet, SimpleOpenNI soni) {
