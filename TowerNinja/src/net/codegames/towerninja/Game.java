@@ -25,6 +25,11 @@ public class Game {
 	 */
 	private Stone[][] tower = new Stone[4][10];
 	
+	/**
+	 * Game constructor
+	 * 
+	 * @param p <code>Main</code> instance
+	 */
 	public Game(PApplet p) {
 		applet = p;
 	}
@@ -35,8 +40,8 @@ public class Game {
 		// steine erzeugen
 		// steine bewegen
 		
-		// display left hand
 		applet.ellipseMode(applet.CENTER);
+		// display left hand
 		for (int i = 0; i < players.size(); i++) {
 			float x = players.get(i).getLeftX();
 			float y = players.get(i).getLeftY();

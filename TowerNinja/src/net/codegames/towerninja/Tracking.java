@@ -1,8 +1,5 @@
 package net.codegames.towerninja;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Vector;
 
 import processing.core.PApplet;
@@ -19,7 +16,6 @@ public class Tracking {
 
 	private SimpleOpenNI soni;
 	private Vector<Integer> actualUsers = new Vector<Integer>();
-	List<HashMap<Character, Float>> playerss = new ArrayList<HashMap<Character, Float>>();
 	Vector<Player> players = new Vector<Player>();
 
 	/**
@@ -157,28 +153,6 @@ public class Tracking {
 	 * @see    Player
 	 */
 	public Vector<Player> getPlayers() {
-		
-		/*
-		updateUsers();
-		players.clear();
-		
-		for (int i = 0; i < actualUsers.size(); i++) {
-			
-			int userId = actualUsers.get(i);
-			
-			PVector right3d = new PVector();
-			PVector right2d = new PVector();
-
-			soni.getJointPositionSkeleton(userId, SimpleOpenNI.SKEL_RIGHT_HAND, right3d);
-			soni.convertRealWorldToProjective(right3d, right2d);
-			
-			HashMap<Character, Float> map = new HashMap<Character, Float>();
-			map.put('i', 1.0f * userId);
-			map.put('x', right2d.x);
-			map.put('y', right2d.y);
-			playerss.add(map);
-		}
-		*/
 		
 		updatePlayers();
 		return  players;
