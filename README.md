@@ -1,4 +1,4 @@
-ninjatower
+NinjaTower
 ==========
 
-A java / processing game for public displays
+A Java / Processing / OpenNI game for public displays.
