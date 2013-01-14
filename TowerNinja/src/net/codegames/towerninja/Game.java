@@ -14,8 +14,10 @@ import processing.core.PApplet;
  *         allows creating new stones for free spots within the tower.
  */
 public class Game {
-	
-	PApplet applet;
+
+	private final long NEW_STONE_DELAY = 1000L;
+	private PApplet mApplet;
+	private long mLastTimeStamp = System.currentTimeMillis();
 
 	/**
 	 * A tower represented by a 2-dimensional array. the first dimension
@@ -24,52 +26,90 @@ public class Game {
 	 * position already. It will fly towards that position though.
 	 */
 	private Stone[][] tower = new Stone[4][10];
-	
+
 	/**
 	 * Game constructor
 	 * 
-	 * @param p <code>Main</code> instance
+	 * @param applet
+	 *            <code>Main</code> instance
 	 */
-	public Game(PApplet p) {
-		applet = p;
+	public Game(PApplet applet) {
+		this.mApplet = applet;
 	}
 
-	public void update(Vector<Player> players) {
+	public void update(float dT, Vector<Player> players) {
+
+		if (System.currentTimeMillis() - mLastTimeStamp > NEW_STONE_DELAY) {
+			mLastTimeStamp = System.currentTimeMillis();
+			System.out.println("creating a stone");
+			createStone();
+		}
+//		mApplet.rect(10, 10, 50, 70);
+		moveStones(dT);
+
 		
-		// createStone();
 		// steine erzeugen
 		// steine bewegen
-		
-		applet.ellipseMode(applet.CENTER);
+
+		mApplet.ellipseMode(mApplet.CENTER);
 		// display left hand
 		for (int i = 0; i < players.size(); i++) {
 			float x = players.get(i).getLeftX();
 			float y = players.get(i).getLeftY();
-			applet.fill(255, 0, 0);
-			applet.ellipse(x, y, 20, 20);
-			applet.fill(0);
-			applet.text(players.get(i).getUserId(), x, y);
+			mApplet.fill(255, 0, 0);
+			mApplet.ellipse(x, y, 20, 20);
+			mApplet.fill(0);
+			mApplet.text(players.get(i).getUserId(), x, y);
 		}
 		// display right hand
 		for (int i = 0; i < players.size(); i++) {
 			float x = players.get(i).getRightX();
 			float y = players.get(i).getRightY();
-			applet.fill(0, 255, 0);
-			applet.ellipse(x, y, 20, 20);
-			applet.fill(0);
-			applet.text(players.get(i).getUserId(), x, y);
+			mApplet.fill(0, 255, 0);
+			mApplet.ellipse(x, y, 20, 20);
+			mApplet.fill(0);
+			mApplet.text(players.get(i).getUserId(), x, y);
 		}
 	}
 
-	private void createStone() {
+	/**
+	 * Moves all stones for the passed number of frames
+	 * 
+	 * @param dT
+	 */
+	private void moveStones(float dT) {
 		towerHeightLoop: for (int i = 0; i < tower.length; i++) {
 			for (int j = 0; j < tower[0].length; j++) {
 				if (tower[i][j] == null) {
-					tower[i][j] = new Stone(50, 5);
 					break towerHeightLoop;
+				} else {
+					tower[i][j].moveToDestination(dT);
+					mApplet.rect(tower[i][j].getxLocation(),
+							tower[i][j].getyLocation(), tower[i][j].getWidth(),
+							tower[i][j].getHeight());
 				}
 			}
 		}
+	}
+
+	/**
+	 * This method loops through the tower data structure and finds the lowest
+	 * leftmost free spot. It then creates a stone for that spot and returns its
+	 * reference
+	 * 
+	 * @return a reference to the next {@link Stone}
+	 */
+	private Stone createStone() {
+		towerHeightLoop: for (int i = 0; i < tower.length; i++) {
+			for (int j = 0; j < tower[0].length; j++) {
+				if (tower[i][j] == null) {
+					tower[i][j] = new Stone(50, 5, i, j);
+					return tower[i][j];
+					// break towerHeightLoop;
+				}
+			}
+		}
+		return null;
 	}
 
 	/**

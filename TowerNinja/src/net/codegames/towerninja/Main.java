@@ -6,6 +6,17 @@ import SimpleOpenNI.SimpleOpenNI;
 public class Main extends PApplet {
 
 	/**
+	 * Set the value of KINECT_PRESENT to true if you actually have one
+	 * connected. Otherwise you won't be able to start the program.
+	 */
+	public static final boolean KINECT_PRESENT = false;
+
+	/**
+	 * When enabled, displays a frame counter
+	 */
+	private static final boolean DEV_MODE = true;
+
+	/**
 	 * This is the main class. It should just handle the basic setup, creating
 	 * the game and updating it regulary. Apart from that, the {@link Game}
 	 * Object should take care of things.
@@ -15,25 +26,25 @@ public class Main extends PApplet {
 	private int height = 480;
 	private Game game;
 	private Tracking tracking;
-	private boolean devMode = true;
-	
+
 	private SimpleOpenNI soni;
 
 	/**
-	 * Initial setup of the Applet. Also creating the {@link Game} and {@link Tracking} object.
+	 * Initial setup of the Applet. Also creating the {@link Game} and
+	 * {@link Tracking} object.
 	 * 
 	 * @see processing.core.PApplet#setup()
 	 */
 	public void setup() {
-		
+
 		size(width, height);
 		frameRate(30);
-		
+
 		game = new Game(this);
-		
+
 		soni = new SimpleOpenNI(this);
 		tracking = new Tracking(this, soni);
-		
+
 	}
 
 	/**
@@ -43,13 +54,17 @@ public class Main extends PApplet {
 	 */
 	public void draw() {
 		background(128);
-		game.update(tracking.getPlayers());
-		
-		if (devMode) {
-			fill(255);
-			noStroke();
-			text((int)frameRate, 10, 20);
+		game.update(frameRate, tracking.getPlayers());
+
+		if (DEV_MODE) {
+			displayFramerate();
 		}
+	}
+
+	private void displayFramerate() {
+		fill(255);
+		noStroke();
+		text((int) frameRate, 10, 20);
 	}
 
 	/**
@@ -60,7 +75,7 @@ public class Main extends PApplet {
 	public void onNewUser(int userId) {
 		soni.requestCalibrationSkeleton(userId, true);
 	}
-	
+
 	/**
 	 * Callback for SimpleOpenNI's automatic user tracking.
 	 * 
@@ -72,7 +87,7 @@ public class Main extends PApplet {
 			soni.startTrackingSkeleton(userId);
 		}
 	}
-	
+
 	public static void main(String[] args) {
 		PApplet.main(new String[] { "net.codegames.towerninja.Main" });
 	}

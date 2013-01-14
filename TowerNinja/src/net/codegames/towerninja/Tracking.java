@@ -21,23 +21,27 @@ public class Tracking {
 	/**
 	 * Initializes Player Tracking with the Main applet and SimpleOpenNi.
 	 * 
-	 * @param applet <code>Main</code> instance
-	 * @param soni   SimpleOpenNI object
+	 * @param applet
+	 *            <code>Main</code> instance
+	 * @param soni
+	 *            SimpleOpenNI object
 	 */
 	public Tracking(PApplet applet, SimpleOpenNI soni) {
 
-		this.soni = soni;
-		this.soni.enableDepth();
-		this.soni.enableUser(SimpleOpenNI.SKEL_PROFILE_HEAD_HANDS);
-		this.soni.setMirror(true);
-
+		if (Main.KINECT_PRESENT) {
+			this.soni = soni;
+			this.soni.enableDepth();
+			this.soni.enableUser(SimpleOpenNI.SKEL_PROFILE_HEAD_HANDS);
+			this.soni.setMirror(true);
+		}
 	}
 
 	/**
 	 * Determines if a user is currently visible to the 3D camera.
 	 * 
-	 * @param  userId ID of a user
-	 * @return        true if the user is currently visible
+	 * @param userId
+	 *            ID of a user
+	 * @return true if the user is currently visible
 	 */
 	private boolean userTracked(int userId) {
 
@@ -45,13 +49,13 @@ public class Tracking {
 		soni.getCoM(userId, pv);
 		return !(pv.x == 0 && pv.y == 0 && pv.z == 0);
 	}
-	
+
 	/**
 	 * Updates the list of users that are currently visible to the 3D camera.
 	 */
-	private void updateUsers() { 
+	private void updateUsers() {
 
-		soni.update(); 
+		soni.update();
 
 		// get current players from camera
 		int[] soniPlayers = soni.getUsers();
@@ -61,76 +65,81 @@ public class Tracking {
 			if (userTracked(soniPlayers[i])) {
 				actualUsers.add(new Integer(soniPlayers[i]));
 			}
-		}		
+		}
 	}
-	
+
 	/**
-	 * Updates the players vector for the current users tracked by the 3D camera.
+	 * Updates the players vector for the current users tracked by the 3D
+	 * camera.
 	 */
 	private void updatePlayers() {
-		
+
 		Vector<Integer> currentUsers = new Vector<Integer>();
 		updateUsers();
-		
+
 		// first loop for all user already stored as players
 		for (int p = 0; p < players.size(); p++) {
 			for (int u = 0; u < actualUsers.size(); u++) {
 				if (players.get(p).getUserId() == actualUsers.get(u)) {
-					
+
 					int userId = players.get(p).getUserId();
-					
+
 					PVector spatial = new PVector();
 					PVector projection = new PVector();
-					
-					soni.getJointPositionSkeleton(userId, SimpleOpenNI.SKEL_LEFT_HAND, spatial);
+
+					soni.getJointPositionSkeleton(userId,
+							SimpleOpenNI.SKEL_LEFT_HAND, spatial);
 					soni.convertRealWorldToProjective(spatial, projection);
 					players.get(p).setLeftX(projection.x);
 					players.get(p).setLeftY(projection.y);
-					
-					soni.getJointPositionSkeleton(userId, SimpleOpenNI.SKEL_RIGHT_HAND, spatial);
+
+					soni.getJointPositionSkeleton(userId,
+							SimpleOpenNI.SKEL_RIGHT_HAND, spatial);
 					soni.convertRealWorldToProjective(spatial, projection);
 					players.get(p).setRightX(projection.x);
 					players.get(p).setRightY(projection.y);
-					
+
 					players.get(p).updateSpeed();
-					
+
 					// remove handled user from actualUsers for second loop
 					actualUsers.remove(u);
-					
+
 					// save userID for third loop
 					currentUsers.add(userId);
 				}
 			}
 		}
-		
+
 		// second loop for all new users not yet stored as players
 		for (int u = 0; u < actualUsers.size(); u++) {
-			
+
 			int userId = actualUsers.get(u);
 			Player player = new Player(userId);
-						
+
 			PVector spatial = new PVector();
 			PVector projection = new PVector();
-			
-			soni.getJointPositionSkeleton(userId, SimpleOpenNI.SKEL_LEFT_HAND, spatial);
+
+			soni.getJointPositionSkeleton(userId, SimpleOpenNI.SKEL_LEFT_HAND,
+					spatial);
 			soni.convertRealWorldToProjective(spatial, projection);
 			player.setLeftX(projection.x);
 			player.setLeftY(projection.y);
-			
-			soni.getJointPositionSkeleton(userId, SimpleOpenNI.SKEL_RIGHT_HAND, spatial);
+
+			soni.getJointPositionSkeleton(userId, SimpleOpenNI.SKEL_RIGHT_HAND,
+					spatial);
 			soni.convertRealWorldToProjective(spatial, projection);
 			player.setRightX(projection.x);
 			player.setRightY(projection.y);
-			
+
 			players.add(player);
-			
+
 			// remove handled user from actualUsers
 			actualUsers.remove(u);
-			
+
 			// save userID for third loop
 			currentUsers.add(userId);
 		}
-		
+
 		// third loop to remove all untracked players
 		for (int p = 0; p < players.size(); p++) {
 			boolean delete = true;
@@ -143,19 +152,21 @@ public class Tracking {
 				players.remove(p);
 			}
 		}
-		
+
 	}
-	
+
 	/**
 	 * Returns a Vector of all Players including their IDs and hand positions.
 	 * 
 	 * @return Vector of Player objects
-	 * @see    Player
+	 * @see Player
 	 */
 	public Vector<Player> getPlayers() {
-		
+		if (!Main.KINECT_PRESENT) {
+			return new Vector<Player>();
+		}
 		updatePlayers();
-		return  players;
+		return players;
 	}
-	
+
 }
