@@ -1,5 +1,7 @@
 package net.codegames.towerninja;
 
+import java.awt.Rectangle;
+import java.awt.geom.Line2D;
 import java.util.Vector;
 
 import processing.core.PApplet;
@@ -45,8 +47,10 @@ public class Game {
 			createStone();
 		}
 //		mApplet.rect(10, 10, 50, 70);
+		detectSlices(players);
+		
 		moveStones(dT);
-
+		
 		
 		// steine erzeugen
 		// steine bewegen
@@ -103,7 +107,12 @@ public class Game {
 		towerHeightLoop: for (int i = 0; i < tower.length; i++) {
 			for (int j = 0; j < tower[0].length; j++) {
 				if (tower[i][j] == null) {
-					tower[i][j] = new Stone(50, 5, i, j);
+					double rand = Math.random();
+					if (rand < 0.75d) {
+						tower[i][j] = new Stone(50, 5, i, j);
+					} else {
+						tower[i][j] = new Bomb(50, 5, i, j);
+					}
 					return tower[i][j];
 					// break towerHeightLoop;
 				}
@@ -115,7 +124,20 @@ public class Game {
 	/**
 	 * draws every stone
 	 */
-	void drawStones() {
+	private void drawStones() {
 
+	}
+	
+	private void detectSlices(Vector<Player> players) {
+		for (int i = 0; i < tower.length; i++) {
+			for (int j = 0; j < tower[0].length; j++) {
+//				
+//				Rectangle stone = new Rectangle((int)tower[i][i].getxLocation(), 
+//						(int)tower[i][i].getyLocation(), (int)tower[i][i].getWidth(), 
+//						(int)tower[i][i].getHeight());
+//				Line2D line = new Line2D(20,20,20,20);
+//				if (stone.intersect(line)) System.out.println("yes");
+			}
+		}
 	}
 }
