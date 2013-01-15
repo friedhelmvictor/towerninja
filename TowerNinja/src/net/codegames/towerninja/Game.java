@@ -15,7 +15,7 @@ import processing.core.PApplet;
  */
 public class Game {
 
-	private final long NEW_STONE_DELAY = 1000L;
+	private final long NEW_STONE_DELAY = 500L;
 	private PApplet mApplet;
 	private long mLastTimeStamp = System.currentTimeMillis();
 
@@ -25,7 +25,7 @@ public class Game {
 	 * added to a certain location, it must not actually be located at that
 	 * position already. It will fly towards that position though.
 	 */
-	private Stone[][] tower = new Stone[4][10];
+	private Stone[][] tower = new Stone[10][4];
 
 	/**
 	 * Game constructor
@@ -37,7 +37,7 @@ public class Game {
 		this.mApplet = applet;
 	}
 
-	public void update(float dT, Vector<Player> players) {
+	public void update(Vector<Player> players) {
 
 		if (System.currentTimeMillis() - mLastTimeStamp > NEW_STONE_DELAY) {
 			mLastTimeStamp = System.currentTimeMillis();
@@ -45,7 +45,7 @@ public class Game {
 			createStone();
 		}
 //		mApplet.rect(10, 10, 50, 70);
-		moveStones(dT);
+		moveStones(mApplet.frameRate);
 
 		
 		// steine erzeugen
@@ -104,6 +104,7 @@ public class Game {
 			for (int j = 0; j < tower[0].length; j++) {
 				if (tower[i][j] == null) {
 					tower[i][j] = new Stone(50, 5, i, j);
+					System.out.println("coordinates " + i + " and " + j);
 					return tower[i][j];
 					// break towerHeightLoop;
 				}

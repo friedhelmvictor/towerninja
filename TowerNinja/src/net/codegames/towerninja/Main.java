@@ -54,7 +54,7 @@ public class Main extends PApplet {
 	 */
 	public void draw() {
 		background(128);
-		game.update(frameRate, tracking.getPlayers());
+		game.update(tracking.getPlayers());
 
 		if (DEV_MODE) {
 			displayFramerate();
