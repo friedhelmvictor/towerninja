@@ -43,14 +43,15 @@ public class Game {
 
 		if (System.currentTimeMillis() - mLastTimeStamp > NEW_STONE_DELAY) {
 			mLastTimeStamp = System.currentTimeMillis();
-			System.out.println("creating a stone");
 			createStone();
 		}
-//		mApplet.rect(10, 10, 50, 70);
+		// mApplet.rect(10, 10, 50, 70);
 		detectSlices(players);
-		
+
 		moveStones(mApplet.frameRate);
 		
+		drawStones();
+
 		// steine erzeugen
 		// steine bewegen
 
@@ -87,9 +88,6 @@ public class Game {
 					break towerHeightLoop;
 				} else {
 					tower[i][j].moveToDestination(dT);
-					mApplet.rect(tower[i][j].getxLocation(),
-							tower[i][j].getyLocation(), tower[i][j].getWidth(),
-							tower[i][j].getHeight());
 				}
 			}
 		}
@@ -112,7 +110,6 @@ public class Game {
 					} else {
 						tower[i][j] = new Bomb(50, 5, i, j);
 					}
-					System.out.println("coordinates " + i + " and " + j);
 					return tower[i][j];
 					// break towerHeightLoop;
 				}
@@ -125,18 +122,31 @@ public class Game {
 	 * draws every stone
 	 */
 	private void drawStones() {
-
+		for (int i = 0; i < tower.length; i++) {
+			for (int j = 0; j < tower[0].length; j++) {
+				if (tower[i][j] != null) {
+					mApplet.rect(tower[i][j].getxLocation(),
+							tower[i][j].getyLocation(), tower[i][j].getWidth(),
+							tower[i][j].getHeight());
+				}
+			}
+		}
 	}
-	
+
 	private void detectSlices(Vector<Player> players) {
 		for (int i = 0; i < tower.length; i++) {
 			for (int j = 0; j < tower[0].length; j++) {
-//				
-//				Rectangle stone = new Rectangle((int)tower[i][i].getxLocation(), 
-//						(int)tower[i][i].getyLocation(), (int)tower[i][i].getWidth(), 
-//						(int)tower[i][i].getHeight());
-//				Line2D line = new Line2D(20,20,20,20);
-//				if (stone.intersect(line)) System.out.println("yes");
+				if (tower[i][j] != null) {
+					for (int p = 0; p < players.size(); p++) {
+						Player currentPlayer = players.get(p);
+						if (currentPlayer.getLeftSpeed() > 20) {
+							if (tower[i][j].contains(currentPlayer.getLeftX(),
+									currentPlayer.getLeftY())) {
+								tower[i][j] = null;
+							}
+						}
+					}
+				}
 			}
 		}
 	}
