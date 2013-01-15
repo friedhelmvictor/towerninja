@@ -18,7 +18,7 @@ public class Main extends PApplet {
 
 	/**
 	 * This is the main class. It should just handle the basic setup, creating
-	 * the game and updating it regulary. Apart from that, the {@link Game}
+	 * the game and updating it regularly. Apart from that, the {@link Game}
 	 * Object should take care of things.
 	 */
 	private static final long serialVersionUID = 1L;

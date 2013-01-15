@@ -39,17 +39,21 @@ public class Game {
 		this.mApplet = applet;
 	}
 
+	/**
+	 * 
+	 * @param players
+	 */
 	public void update(Vector<Player> players) {
 
 		if (System.currentTimeMillis() - mLastTimeStamp > NEW_STONE_DELAY) {
 			mLastTimeStamp = System.currentTimeMillis();
 			createStone();
 		}
-		// mApplet.rect(10, 10, 50, 70);
+
 		detectSlices(players);
 
-		moveStones(mApplet.frameRate);
-		
+		moveStones();
+
 		drawStones();
 
 		// steine erzeugen
@@ -81,13 +85,13 @@ public class Game {
 	 * 
 	 * @param dT
 	 */
-	private void moveStones(float dT) {
+	private void moveStones() {
 		towerHeightLoop: for (int i = 0; i < tower.length; i++) {
 			for (int j = 0; j < tower[0].length; j++) {
 				if (tower[i][j] == null) {
 					break towerHeightLoop;
 				} else {
-					tower[i][j].moveToDestination(dT);
+					tower[i][j].moveToDestination(mApplet.frameRate);
 				}
 			}
 		}
@@ -133,13 +137,19 @@ public class Game {
 		}
 	}
 
+	/**
+	 * Checks for all flying stones if a player currently slices them.
+	 * 
+	 * @param players
+	 */
 	private void detectSlices(Vector<Player> players) {
 		for (int i = 0; i < tower.length; i++) {
 			for (int j = 0; j < tower[0].length; j++) {
 				if (tower[i][j] != null) {
 					for (int p = 0; p < players.size(); p++) {
 						Player currentPlayer = players.get(p);
-						if (currentPlayer.getLeftSpeed() > 20) {
+						if (currentPlayer.getLeftSpeed() > 20
+								&& tower[i][j] != null) {
 							if (tower[i][j].contains(currentPlayer.getLeftX(),
 									currentPlayer.getLeftY())) {
 								tower[i][j] = null;
