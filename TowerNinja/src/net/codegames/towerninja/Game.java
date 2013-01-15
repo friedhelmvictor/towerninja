@@ -18,6 +18,7 @@ import processing.core.PApplet;
 public class Game {
 
 	private final long NEW_STONE_DELAY = 500L;
+	private final float MIN_SPEED = 20;
 	private PApplet mApplet;
 	private long mLastTimeStamp = System.currentTimeMillis();
 
@@ -86,11 +87,9 @@ public class Game {
 	 * @param dT
 	 */
 	private void moveStones() {
-		towerHeightLoop: for (int i = 0; i < tower.length; i++) {
+		for (int i = 0; i < tower.length; i++) {
 			for (int j = 0; j < tower[0].length; j++) {
-				if (tower[i][j] == null) {
-					break towerHeightLoop;
-				} else {
+				if (tower[i][j] != null) {
 					tower[i][j].moveToDestination(mApplet.frameRate);
 				}
 			}
@@ -148,10 +147,19 @@ public class Game {
 				if (tower[i][j] != null) {
 					for (int p = 0; p < players.size(); p++) {
 						Player currentPlayer = players.get(p);
-						if (currentPlayer.getLeftSpeed() > 20
+						// left hand detection
+						if (currentPlayer.getLeftSpeed() > MIN_SPEED
 								&& tower[i][j] != null) {
 							if (tower[i][j].contains(currentPlayer.getLeftX(),
 									currentPlayer.getLeftY())) {
+								tower[i][j] = null;
+							}
+						}
+						// right hand detection
+						if (currentPlayer.getRightSpeed() > MIN_SPEED
+								&& tower[i][j] != null) {
+							if (tower[i][j].contains(currentPlayer.getRightX(),
+									currentPlayer.getRightY())) {
 								tower[i][j] = null;
 							}
 						}
