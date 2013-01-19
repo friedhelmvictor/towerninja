@@ -1,66 +1,72 @@
 package net.codegames.towerninja;
 
+import java.awt.Color;
+import java.util.Vector;
+
 public class Player {
-	
+
 	private int userId;
-	
-	private float leftX;
-	private float leftY;
-	private float lastLeftX;
-	private float lastLeftY;
-	
-	private float rightX;
-	private float rightY;
-	private float lastRightX;
-	private float lastRightY;
-	
+	private Color color;
+
+	private Vector<Float[]> left = new Vector<Float[]>();
+	private Vector<Float[]> right = new Vector<Float[]>();
+
 	private float leftSpeed;
 	private float rightSpeed;
-	
-	public Player(int userId) {
+
+	public Player(int userId, Color color) {
 		this.userId = userId;
+		this.color = color;
 		leftSpeed = 0;
 		rightSpeed = 0;
 	}
 
 	public float getLeftX() {
-		return leftX;
-	}
-
-	public void setLeftX(float leftX) {
-		lastLeftX = this.leftX;
-		this.leftX = leftX;
+		return left.get(0)[0];
 	}
 
 	public float getLeftY() {
-		return leftY;
+		return left.get(0)[1];
 	}
 
-	public void setLeftY(float leftY) {
-		lastLeftY = this.leftY;
-		this.leftY = leftY;
+	public void setLeft(float x, float y) {
+		left.add(0, new Float[] { x, y });
+		if (left.size() > 5) {
+			left.remove(left.size() - 1);
+		}
+		if (left.size() > 1) {
+			leftSpeed = (float) Math.sqrt(Math.pow(left.get(0)[0]
+					- left.get(1)[0], 2)
+					+ Math.pow(left.get(0)[1] - left.get(1)[1], 2));
+		}
 	}
 
 	public float getRightX() {
-		return rightX;
-	}
-
-	public void setRightX(float rightX) {
-		lastRightX = this.rightX;
-		this.rightX = rightX;
+		return right.get(0)[0];
 	}
 
 	public float getRightY() {
-		return rightY;
+		return right.get(0)[1];
 	}
 
-	public void setRightY(float rightY) {
-		lastRightY = this.rightY;
-		this.rightY = rightY;
+	public void setRight(float x, float y) {
+		right.add(0, new Float[] { x, y });
+		if (right.size() > 5) {
+			right.remove(right.size() - 1);
+		}
+		if (right.size() > 1) {
+			rightSpeed = (float) Math.sqrt(Math.pow(right.get(0)[0]
+					- right.get(1)[0], 2)
+					+ Math.pow(right.get(0)[1] - right.get(1)[1], 2));
+		}
 	}
 
 	public int getUserId() {
 		return userId;
+	}
+
+	public int getColor() {
+		return color.getRGB();
 	}
 
 	public float getLeftSpeed() {
@@ -69,11 +75,6 @@ public class Player {
 
 	public float getRightSpeed() {
 		return rightSpeed;
-	}
-	
-	public void updateSpeed() {
-		leftSpeed = (float)Math.sqrt(Math.pow(leftX - lastLeftX, 2) + Math.pow(leftY - lastLeftY, 2));
-		rightSpeed = (float)Math.sqrt(Math.pow(rightX - lastRightX, 2) + Math.pow(rightY - lastRightY, 2));
 	}
 
 }

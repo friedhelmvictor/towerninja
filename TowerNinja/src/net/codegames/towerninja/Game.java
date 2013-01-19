@@ -65,7 +65,7 @@ public class Game {
 		for (int i = 0; i < players.size(); i++) {
 			float x = players.get(i).getLeftX();
 			float y = players.get(i).getLeftY();
-			mApplet.fill(255, 0, 0);
+			mApplet.fill(players.get(i).getColor());
 			mApplet.ellipse(x, y, 20, 20);
 			mApplet.fill(0);
 			mApplet.text(players.get(i).getUserId(), x, y);
@@ -74,7 +74,7 @@ public class Game {
 		for (int i = 0; i < players.size(); i++) {
 			float x = players.get(i).getRightX();
 			float y = players.get(i).getRightY();
-			mApplet.fill(0, 255, 0);
+			mApplet.fill(players.get(i).getColor());
 			mApplet.ellipse(x, y, 20, 20);
 			mApplet.fill(0);
 			mApplet.text(players.get(i).getUserId(), x, y);

@@ -1,5 +1,6 @@
 package net.codegames.towerninja;
 
+import java.awt.Color;
 import java.util.Vector;
 
 import processing.core.PApplet;
@@ -17,6 +18,7 @@ public class Tracking {
 	private SimpleOpenNI soni;
 	private Vector<Integer> actualUsers = new Vector<Integer>();
 	Vector<Player> players = new Vector<Player>();
+	private Color[] colors = {new Color(0,255,0), new Color(0,0,255)};
 
 	/**
 	 * Initializes Player Tracking with the Main applet and SimpleOpenNi.
@@ -90,16 +92,12 @@ public class Tracking {
 					soni.getJointPositionSkeleton(userId,
 							SimpleOpenNI.SKEL_LEFT_HAND, spatial);
 					soni.convertRealWorldToProjective(spatial, projection);
-					players.get(p).setLeftX(projection.x);
-					players.get(p).setLeftY(projection.y);
+					players.get(p).setLeft(projection.x, projection.y);
 
 					soni.getJointPositionSkeleton(userId,
 							SimpleOpenNI.SKEL_RIGHT_HAND, spatial);
 					soni.convertRealWorldToProjective(spatial, projection);
-					players.get(p).setRightX(projection.x);
-					players.get(p).setRightY(projection.y);
-
-					players.get(p).updateSpeed();
+					players.get(p).setRight(projection.x, projection.y);
 
 					// remove handled user from actualUsers for second loop
 					actualUsers.remove(u);
@@ -114,7 +112,7 @@ public class Tracking {
 		for (int u = 0; u < actualUsers.size(); u++) {
 
 			int userId = actualUsers.get(u);
-			Player player = new Player(userId);
+			Player player = new Player(userId, colors[userId%colors.length]);
 
 			PVector spatial = new PVector();
 			PVector projection = new PVector();
@@ -122,14 +120,12 @@ public class Tracking {
 			soni.getJointPositionSkeleton(userId, SimpleOpenNI.SKEL_LEFT_HAND,
 					spatial);
 			soni.convertRealWorldToProjective(spatial, projection);
-			player.setLeftX(projection.x);
-			player.setLeftY(projection.y);
+			player.setLeft(projection.x, projection.y);
 
 			soni.getJointPositionSkeleton(userId, SimpleOpenNI.SKEL_RIGHT_HAND,
 					spatial);
 			soni.convertRealWorldToProjective(spatial, projection);
-			player.setRightX(projection.x);
-			player.setRightY(projection.y);
+			player.setRight(projection.x, projection.y);
 
 			players.add(player);
 
