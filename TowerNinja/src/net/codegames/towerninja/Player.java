@@ -3,6 +3,11 @@ package net.codegames.towerninja;
 import java.awt.Color;
 import java.util.Vector;
 
+/**
+ * A Player represents all Date about a tracked user playing this game. Hand
+ * positions are stored and returned, additionaly the hands speed is always
+ * updated.
+ */
 public class Player {
 
 	private int userId;
@@ -13,7 +18,7 @@ public class Player {
 
 	private float leftSpeed;
 	private float rightSpeed;
-	
+
 	private static final int NUMBER_OF_COORDS = 10;
 
 	public Player(int userId, Color color) {
@@ -34,18 +39,19 @@ public class Player {
 	public Vector<Float[]> getLeft() {
 		return left;
 	}
-	
+
 	public void setLeft(float x, float y) {
 		if (left.isEmpty()) {
 			for (int i = 0; i < NUMBER_OF_COORDS; i++) {
 				left.add(0, new Float[] { x, y });
 			}
-		}		
-		
+		}
+
 		left.add(0, new Float[] { x, y });
 		left.remove(left.size() - 1);
 
-		leftSpeed = (float) Math.sqrt(Math.pow(left.get(0)[0]	- left.get(1)[0], 2) + Math.pow(left.get(0)[1] - left.get(1)[1], 2));
+		leftSpeed = (float) Math.sqrt(Math.pow(left.get(0)[0] - left.get(1)[0],
+				2) + Math.pow(left.get(0)[1] - left.get(1)[1], 2));
 	}
 
 	public float getRightX() {
@@ -59,18 +65,20 @@ public class Player {
 	public Vector<Float[]> getRight() {
 		return right;
 	}
-	
+
 	public void setRight(float x, float y) {
 		if (right.isEmpty()) {
 			for (int i = 0; i < NUMBER_OF_COORDS; i++) {
 				right.add(0, new Float[] { x, y });
 			}
-		}		
-		
+		}
+
 		right.add(0, new Float[] { x, y });
 		right.remove(right.size() - 1);
 
-		rightSpeed = (float) Math.sqrt(Math.pow(right.get(0)[0]	- right.get(1)[0], 2) + Math.pow(right.get(0)[1] - right.get(1)[1], 2));
+		rightSpeed = (float) Math.sqrt(Math.pow(right.get(0)[0]
+				- right.get(1)[0], 2)
+				+ Math.pow(right.get(0)[1] - right.get(1)[1], 2));
 	}
 
 	public int getUserId() {

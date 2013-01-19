@@ -104,6 +104,7 @@ public class Game {
 	 * draws every stone
 	 */
 	private void drawStones() {
+		mApplet.fill(64);
 		for (int i = 0; i < tower.length; i++) {
 			for (int j = 0; j < tower[0].length; j++) {
 				if (tower[i][j] != null) {
@@ -128,12 +129,13 @@ public class Game {
 			// left hand
 			mApplet.strokeWeight(10);
 			// path of last movement
-			mApplet.stroke(color, 64);
-			for (int i = 1; i < currentPlayer.getLeft().size() - 1; i++) {
+			int alpha = (currentPlayer.getLeftSpeed() > MIN_SPEED) ? 96 : 64;
+			mApplet.stroke(color, alpha);
+			for (int i = 0; i < currentPlayer.getLeft().size() - 1; i++) {
 				mApplet.line(currentPlayer.getLeft().get(i)[0], currentPlayer
 						.getLeft().get(i)[1], currentPlayer.getLeft()
 						.get(i + 1)[0], currentPlayer.getLeft().get(i + 1)[1]);
-				mApplet.stroke(color, 64 - i * 6);
+				mApplet.stroke(color, (int)(alpha * Math.pow(0.67, i)));
 			}
 			// circle for current hand position
 			if (currentPlayer.getLeftSpeed() > MIN_SPEED) {
@@ -148,12 +150,13 @@ public class Game {
 			// left hand
 			mApplet.strokeWeight(10);
 			// path of last movement
-			mApplet.stroke(color, 64);
-			for (int i = 1; i < currentPlayer.getRight().size() - 1; i++) {
+			alpha = (currentPlayer.getRightSpeed() > MIN_SPEED) ? 96 : 64;
+			mApplet.stroke(color, alpha);
+			for (int i = 0; i < currentPlayer.getRight().size() - 1; i++) {
 				mApplet.line(currentPlayer.getRight().get(i)[0], currentPlayer
 						.getRight().get(i)[1], currentPlayer.getRight()
 						.get(i + 1)[0], currentPlayer.getRight().get(i + 1)[1]);
-				mApplet.stroke(color, 64 - i * 6);
+				mApplet.stroke(color, (int)(alpha * Math.pow(0.67, i)));
 			}
 			// circle for current hand position
 			if (currentPlayer.getRightSpeed() > MIN_SPEED) {
@@ -199,4 +202,5 @@ public class Game {
 			}
 		}
 	}
+	
 }
