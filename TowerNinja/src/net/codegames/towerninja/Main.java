@@ -9,7 +9,7 @@ public class Main extends PApplet {
 	 * Set the value of KINECT_PRESENT to true if you actually have one
 	 * connected. Otherwise you won't be able to start the program.
 	 */
-	public static final boolean KINECT_PRESENT = false;
+	public static final boolean KINECT_PRESENT = true;
 
 	/**
 	 * When enabled, displays a frame counter
@@ -39,6 +39,7 @@ public class Main extends PApplet {
 
 		size(width, height);
 		frameRate(30);
+		smooth();
 
 		game = new Game(this);
 
@@ -53,18 +54,21 @@ public class Main extends PApplet {
 	 * @see processing.core.PApplet#draw()
 	 */
 	public void draw() {
-		background(128);
+		background(224);
 		game.update(tracking.getPlayers());
 
 		if (DEV_MODE) {
-			displayFramerate();
+			displayDevOutput();
 		}
 	}
 
-	private void displayFramerate() {
-		fill(255);
+	private void displayDevOutput() {
+		fill(64);
 		noStroke();
-		text((int) frameRate, 10, 20);
+		text("FPS: " + (int) frameRate, 10, 20);
+		
+		Runtime rt = Runtime.getRuntime();
+		text("Memory: " + Math.round((rt.totalMemory() - rt.freeMemory())/(1024*1024)) + " MB", 10, 35);
 	}
 
 	/**
