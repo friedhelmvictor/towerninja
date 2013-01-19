@@ -5,12 +5,14 @@ public class Stone {
 	private float xLocation, yLocation;
 	// Destination in the tower where the Stone is to be put.
 	private float iDestination, jDestination;
-	private float width = 100;
-	private float height = 20;
+	private float width = 70;
+	private float height = 40;
 
 	// variables for movement
 	public float yVelocity = 0.2f;
 	public float xVelocity = 0.1f;
+	
+	private String background = "resources/brick.png";
 
 	public Stone(float xLocation, float yLocation, int iDestination,
 			int jDestination) {
@@ -55,5 +57,9 @@ public class Stone {
 	public boolean contains(float x, float y) {
 		return (x <= xLocation + width && x >= xLocation
 				&& y <= yLocation + height && y >= yLocation);
+	}
+	
+	public String getBackground() {
+		return background;
 	}
 }

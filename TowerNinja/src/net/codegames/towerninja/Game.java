@@ -5,6 +5,7 @@ import java.awt.geom.Line2D;
 import java.util.Vector;
 
 import processing.core.PApplet;
+import processing.core.PImage;
 
 // kennt alle steine
 // kennt Turm
@@ -52,7 +53,7 @@ public class Game {
 		}
 
 		drawPlayerHands(players);
-		
+
 		detectSlices(players);
 
 		moveStones();
@@ -108,9 +109,9 @@ public class Game {
 		for (int i = 0; i < tower.length; i++) {
 			for (int j = 0; j < tower[0].length; j++) {
 				if (tower[i][j] != null) {
-					mApplet.rect(tower[i][j].getxLocation(),
-							tower[i][j].getyLocation(), tower[i][j].getWidth(),
-							tower[i][j].getHeight());
+					PImage img = mApplet.loadImage(tower[i][j].getBackground());
+					mApplet.image(img, tower[i][j].getxLocation(),
+							tower[i][j].getyLocation());
 				}
 			}
 		}
@@ -119,13 +120,14 @@ public class Game {
 	/**
 	 * Draws the hand positions of every player.
 	 * 
-	 * @param players vector of all {@link Player}s
+	 * @param players
+	 *            vector of all {@link Player}s
 	 */
 	private void drawPlayerHands(Vector<Player> players) {
 		for (int p = 0; p < players.size(); p++) {
 			Player currentPlayer = players.get(p);
 			int color = currentPlayer.getColor();
-			
+
 			// left hand
 			mApplet.strokeWeight(10);
 			// path of last movement
@@ -135,7 +137,7 @@ public class Game {
 				mApplet.line(currentPlayer.getLeft().get(i)[0], currentPlayer
 						.getLeft().get(i)[1], currentPlayer.getLeft()
 						.get(i + 1)[0], currentPlayer.getLeft().get(i + 1)[1]);
-				mApplet.stroke(color, (int)(alpha * Math.pow(0.67, i)));
+				mApplet.stroke(color, (int) (alpha * Math.pow(0.67, i)));
 			}
 			// circle for current hand position
 			if (currentPlayer.getLeftSpeed() > MIN_SPEED) {
@@ -145,8 +147,9 @@ public class Game {
 			}
 			mApplet.ellipseMode(mApplet.CENTER);
 			mApplet.noStroke();
-			mApplet.ellipse(currentPlayer.getLeftX(), currentPlayer.getLeftY(), 20, 20);
-			
+			mApplet.ellipse(currentPlayer.getLeftX(), currentPlayer.getLeftY(),
+					20, 20);
+
 			// left hand
 			mApplet.strokeWeight(10);
 			// path of last movement
@@ -154,9 +157,10 @@ public class Game {
 			mApplet.stroke(color, alpha);
 			for (int i = 0; i < currentPlayer.getRight().size() - 1; i++) {
 				mApplet.line(currentPlayer.getRight().get(i)[0], currentPlayer
-						.getRight().get(i)[1], currentPlayer.getRight()
-						.get(i + 1)[0], currentPlayer.getRight().get(i + 1)[1]);
-				mApplet.stroke(color, (int)(alpha * Math.pow(0.67, i)));
+						.getRight().get(i)[1],
+						currentPlayer.getRight().get(i + 1)[0], currentPlayer
+								.getRight().get(i + 1)[1]);
+				mApplet.stroke(color, (int) (alpha * Math.pow(0.67, i)));
 			}
 			// circle for current hand position
 			if (currentPlayer.getRightSpeed() > MIN_SPEED) {
@@ -166,14 +170,16 @@ public class Game {
 			}
 			mApplet.ellipseMode(mApplet.CENTER);
 			mApplet.noStroke();
-			mApplet.ellipse(currentPlayer.getRightX(), currentPlayer.getRightY(), 20, 20);
+			mApplet.ellipse(currentPlayer.getRightX(),
+					currentPlayer.getRightY(), 20, 20);
 		}
 	}
 
 	/**
 	 * Checks for all flying stones if a player currently slices them.
 	 * 
-	 * @param players vector of all {@link Player}s
+	 * @param players
+	 *            vector of all {@link Player}s
 	 */
 	private void detectSlices(Vector<Player> players) {
 		for (int i = 0; i < tower.length; i++) {
@@ -202,5 +208,5 @@ public class Game {
 			}
 		}
 	}
-	
+
 }
