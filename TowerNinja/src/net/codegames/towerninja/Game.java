@@ -109,7 +109,7 @@ public class Game {
 		for (int i = 0; i < tower.length; i++) {
 			for (int j = 0; j < tower[0].length; j++) {
 				if (tower[i][j] != null) {
-					PImage img = mApplet.loadImage(tower[i][j].getBackground());
+					PImage img = mApplet.loadImage(mApplet.getCodeBase()+tower[i][j].getBackground());
 					mApplet.image(img, tower[i][j].getxLocation(),
 							tower[i][j].getyLocation());
 				}

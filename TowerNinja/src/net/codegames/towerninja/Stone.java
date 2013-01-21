@@ -12,7 +12,9 @@ public class Stone {
 	public float yVelocity = 0.2f;
 	public float xVelocity = 0.1f;
 	
-	private String background = "resources/brick.png";
+//	private String background = getClass().getClassLoader().getResource("resources/brick.png").toString();
+//	private String background = "C:/Users/twat/git/towerninja/TowerNinja/resources/brick.png";
+	private String background = "../resources/brick.png";
 
 	public Stone(float xLocation, float yLocation, int iDestination,
 			int jDestination) {
