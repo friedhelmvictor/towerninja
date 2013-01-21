@@ -11,9 +11,6 @@ public class Stone {
 	// variables for movement
 	public float yVelocity = 0.2f;
 	public float xVelocity = 0.1f;
-	
-//	private String background = getClass().getClassLoader().getResource("resources/brick.png").toString();
-//	private String background = "C:/Users/twat/git/towerninja/TowerNinja/resources/brick.png";
 	private String background = "../resources/brick.png";
 
 	public Stone(float xLocation, float yLocation, int iDestination,
@@ -22,17 +19,24 @@ public class Stone {
 		this.yLocation = yLocation;
 		this.iDestination = iDestination;
 		this.jDestination = jDestination;
+		this.xVelocity = exactXDestination() - xLocation;
+		// System.out.println("xVelocity: " + xVelocity + "= 30 + ("
+		// + jDestination + " * " + width + ") - " + xLocation);
 
-		this.xVelocity = 30 + (jDestination * width) - xLocation;
-//		System.out.println("xVelocity: " + xVelocity + "= 30 + ("
-//				+ jDestination + " * " + width + ") - " + xLocation);
-
-		this.yVelocity = 300 - (iDestination * height) - yLocation;
-//		System.out.println("yVelocity: " + yVelocity + "= 500 - ("
-//				+ iDestination + " * " + height + ") - " + yLocation);
+		this.yVelocity = exactYDestination() - yLocation;
+		// System.out.println("yVelocity: " + yVelocity + "= 500 - ("
+		// + iDestination + " * " + height + ") - " + yLocation);
 		this.xVelocity /= 5000;
 		this.yVelocity /= 5000;
 
+	}
+
+	private float exactXDestination() {
+		return 90 + (jDestination * width);
+	}
+
+	private float exactYDestination() {
+		return 400 - (iDestination * height);
 	}
 
 	public float getxLocation() {
@@ -52,15 +56,20 @@ public class Stone {
 	}
 
 	public void moveToDestination(float dT) {
-		xLocation += dT * xVelocity;
-		yLocation += dT * yVelocity;
+		if (Math.abs(xLocation - exactXDestination()) < 1
+				&& Math.abs(yLocation - exactYDestination()) < 1)
+			;
+		else {
+			xLocation += dT * xVelocity;
+			yLocation += dT * yVelocity;
+		}
 	}
 
 	public boolean contains(float x, float y) {
 		return (x <= xLocation + width && x >= xLocation
 				&& y <= yLocation + height && y >= yLocation);
 	}
-	
+
 	public String getBackground() {
 		return background;
 	}
