@@ -21,6 +21,7 @@ public class Game {
 	private final long NEW_STONE_DELAY = 500L;
 	private final float MIN_SPEED = 20;
 	private PApplet mApplet;
+	private AppletRenderer mRenderer;
 	private long mLastTimeStamp = System.currentTimeMillis();
 
 	/**
@@ -29,7 +30,7 @@ public class Game {
 	 * added to a certain location, it must not actually be located at that
 	 * position already. It will fly towards that position though.
 	 */
-	private Stone[][] tower = new Stone[10][4];
+	private Brick[][] mTower = new Brick[10][4];
 
 	/**
 	 * Game constructor
@@ -39,12 +40,9 @@ public class Game {
 	 */
 	public Game(PApplet applet) {
 		this.mApplet = applet;
+		this.mRenderer = new AppletRenderer(mApplet);
 	}
 
-	/**
-	 * 
-	 * @param players
-	 */
 	public void update(Vector<Player> players) {
 
 		if (System.currentTimeMillis() - mLastTimeStamp > NEW_STONE_DELAY) {
@@ -53,11 +51,8 @@ public class Game {
 		}
 
 		drawPlayerHands(players);
-
 		detectSlices(players);
-
 		moveStones();
-
 		drawStones();
 	}
 
@@ -67,10 +62,10 @@ public class Game {
 	 * @param dT
 	 */
 	private void moveStones() {
-		for (int i = 0; i < tower.length; i++) {
-			for (int j = 0; j < tower[0].length; j++) {
-				if (tower[i][j] != null) {
-					tower[i][j].moveToDestination(mApplet.frameRate);
+		for (int i = 0; i < mTower.length; i++) {
+			for (int j = 0; j < mTower[0].length; j++) {
+				if (mTower[i][j] != null) {
+					mTower[i][j].moveToDestination(mApplet.frameRate);
 				}
 			}
 		}
@@ -81,19 +76,19 @@ public class Game {
 	 * leftmost free spot. It then creates a stone for that spot and returns its
 	 * reference
 	 * 
-	 * @return a reference to the next {@link Stone}
+	 * @return a reference to the next {@link Brick}
 	 */
-	private Stone createStone() {
-		towerHeightLoop: for (int i = 0; i < tower.length; i++) {
-			for (int j = 0; j < tower[0].length; j++) {
-				if (tower[i][j] == null) {
+	private Brick createStone() {
+		towerHeightLoop: for (int i = 0; i < mTower.length; i++) {
+			for (int j = 0; j < mTower[0].length; j++) {
+				if (mTower[i][j] == null) {
 					double rand = Math.random();
 					if (rand < 0.75d) {
-						tower[i][j] = new Stone(50, 5, i, j);
+						mTower[i][j] = new Brick(50, 5, i, j);
 					} else {
-						tower[i][j] = new Bomb(50, 5, i, j);
+						mTower[i][j] = new Bomb(50, 5, i, j);
 					}
-					return tower[i][j];
+					return mTower[i][j];
 					// break towerHeightLoop;
 				}
 			}
@@ -106,12 +101,13 @@ public class Game {
 	 */
 	private void drawStones() {
 		mApplet.fill(64);
-		for (int i = 0; i < tower.length; i++) {
-			for (int j = 0; j < tower[0].length; j++) {
-				if (tower[i][j] != null) {
-					PImage img = mApplet.loadImage(mApplet.getCodeBase()+tower[i][j].getBackground());
-					mApplet.image(img, tower[i][j].getxLocation(),
-							tower[i][j].getyLocation());
+		for (int i = 0; i < mTower.length; i++) {
+			for (int j = 0; j < mTower[0].length; j++) {
+				if (mTower[i][j] != null) {
+					mTower[i][j].draw(mRenderer);
+//					PImage img = mApplet.loadImage(mApplet.getCodeBase()+mTower[i][j].getBackground());
+//					mApplet.image(img, mTower[i][j].getxLocation(),
+//							mTower[i][j].getyLocation());
 				}
 			}
 		}
@@ -182,25 +178,25 @@ public class Game {
 	 *            vector of all {@link Player}s
 	 */
 	private void detectSlices(Vector<Player> players) {
-		for (int i = 0; i < tower.length; i++) {
-			for (int j = 0; j < tower[0].length; j++) {
-				if (tower[i][j] != null) {
+		for (int i = 0; i < mTower.length; i++) {
+			for (int j = 0; j < mTower[0].length; j++) {
+				if (mTower[i][j] != null) {
 					for (int p = 0; p < players.size(); p++) {
 						Player currentPlayer = players.get(p);
 						// left hand detection
 						if (currentPlayer.getLeftSpeed() > MIN_SPEED
-								&& tower[i][j] != null) {
-							if (tower[i][j].contains(currentPlayer.getLeftX(),
+								&& mTower[i][j] != null) {
+							if (mTower[i][j].contains(currentPlayer.getLeftX(),
 									currentPlayer.getLeftY())) {
-								tower[i][j] = null;
+								mTower[i][j] = null;
 							}
 						}
 						// right hand detection
 						if (currentPlayer.getRightSpeed() > MIN_SPEED
-								&& tower[i][j] != null) {
-							if (tower[i][j].contains(currentPlayer.getRightX(),
+								&& mTower[i][j] != null) {
+							if (mTower[i][j].contains(currentPlayer.getRightX(),
 									currentPlayer.getRightY())) {
-								tower[i][j] = null;
+								mTower[i][j] = null;
 							}
 						}
 					}
