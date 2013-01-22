@@ -31,7 +31,6 @@ public class Main extends PApplet {
 	private int height = (int)(SIZE_MULTIPLIER * 480);
 	private Game game;
 	private Tracking tracking;
-	private Parabole par = new Parabole(1, 0, 3, 6, 5, -2);
 
 	private SimpleOpenNI soni;
 

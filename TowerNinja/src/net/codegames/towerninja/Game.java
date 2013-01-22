@@ -1,11 +1,8 @@
 package net.codegames.towerninja;
 
-import java.awt.Rectangle;
-import java.awt.geom.Line2D;
 import java.util.Vector;
 
 import processing.core.PApplet;
-import processing.core.PImage;
 
 // kennt alle steine
 // kennt Turm
@@ -79,7 +76,7 @@ public class Game {
 	 * @return a reference to the next {@link Brick}
 	 */
 	private Brick createStone() {
-		towerHeightLoop: for (int i = 0; i < mTower.length; i++) {
+		for (int i = 0; i < mTower.length; i++) {
 			for (int j = 0; j < mTower[0].length; j++) {
 				if (mTower[i][j] == null) {
 					double rand = Math.random();
@@ -131,8 +128,10 @@ public class Game {
 				// draw 3 traces of different length over each other
 				for (int i = 0; i < 3; i++) {
 					mApplet.beginShape();
-					for (int j = 0; j < currentPlayer.getLeft().size() - (i * 2 + 3); j++) {
-						mApplet.vertex(currentPlayer.getLeft().get(j)[0], currentPlayer.getLeft().get(j)[1]);
+					for (int j = 0; j < currentPlayer.getLeft().size()
+							- (i * 2 + 3); j++) {
+						mApplet.vertex(currentPlayer.getLeft().get(j)[0],
+								currentPlayer.getLeft().get(j)[1]);
 					}
 					mApplet.endShape();
 				}
@@ -142,8 +141,10 @@ public class Game {
 				// draw 3 traces of different length over each other
 				for (int i = 0; i < 3; i++) {
 					mApplet.beginShape();
-					for (int j = 0; j < currentPlayer.getRight().size() - (i * 2 + 3); j++) {
-						mApplet.vertex(currentPlayer.getRight().get(j)[0], currentPlayer.getRight().get(j)[1]);
+					for (int j = 0; j < currentPlayer.getRight().size()
+							- (i * 2 + 3); j++) {
+						mApplet.vertex(currentPlayer.getRight().get(j)[0],
+								currentPlayer.getRight().get(j)[1]);
 					}
 					mApplet.endShape();
 				}
@@ -174,7 +175,8 @@ public class Game {
 						// right hand detection
 						if (currentPlayer.getRightSpeed() > MIN_SPEED
 								&& mTower[i][j] != null) {
-							if (mTower[i][j].contains(currentPlayer.getRightX(),
+							if (mTower[i][j].contains(
+									currentPlayer.getRightX(),
 									currentPlayer.getRightY())) {
 								removeStone(i, j);
 							}
@@ -187,8 +189,8 @@ public class Game {
 
 	private void removeStone(int i, int j) {
 		mTower[i][j] = null;
-		if(mTower[i+1][j] != null) {
-			mTower[i][j+1].setjDestination(j);
+		if (mTower[i + 1][j] != null) {
+			mTower[i][j + 1].setjDestination(j);
 		}
 	}
 
