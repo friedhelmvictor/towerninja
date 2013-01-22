@@ -79,7 +79,7 @@ public class Game {
 	 * @return a reference to the next {@link Brick}
 	 */
 	private Brick createStone() {
-		towerHeightLoop: for (int i = 0; i < mTower.length; i++) {
+		for (int i = 0; i < mTower.length; i++) {
 			for (int j = 0; j < mTower[0].length; j++) {
 				if (mTower[i][j] == null) {
 					double rand = Math.random();
