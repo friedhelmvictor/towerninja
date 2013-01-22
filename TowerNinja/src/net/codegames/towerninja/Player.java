@@ -35,6 +35,14 @@ public class Player {
 	public float getLeftY() {
 		return left.get(0)[1];
 	}
+	
+	public float getLastLeftX() {
+		return left.get(1)[0];
+	}
+
+	public float getLastLeftY() {
+		return left.get(1)[1];
+	}
 
 	public Vector<Float[]> getLeft() {
 		return left;
@@ -60,6 +68,14 @@ public class Player {
 
 	public float getRightY() {
 		return right.get(0)[1];
+	}
+	
+	public float getLastRightX() {
+		return right.get(1)[0];
+	}
+
+	public float getLastRightY() {
+		return right.get(1)[1];
 	}
 
 	public Vector<Float[]> getRight() {

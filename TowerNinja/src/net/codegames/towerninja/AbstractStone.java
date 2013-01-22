@@ -1,5 +1,9 @@
 package net.codegames.towerninja;
 
+import java.awt.Rectangle;
+import java.awt.geom.Line2D;
+import java.awt.geom.Rectangle2D;
+
 abstract public class AbstractStone {
 
 	// Current location of the stone
@@ -123,9 +127,11 @@ abstract public class AbstractStone {
 		return isOnTower;
 	}
 
-	public boolean contains(float x, float y) {
-		return (x <= getxLocation() + getWidth() && x >= getxLocation()
-				&& y <= getyLocation() + getHeight() && y >= getyLocation());
+	public boolean contains(float x1, float y1, float x2, float y2) {
+		Rectangle2D rect = new Rectangle.Float(getxLocation(), getyLocation(), getWidth(), getHeight());
+		return rect.intersectsLine(new Line2D.Float(x1, y1, x2, y2));
+//		return (x <= getxLocation() + getWidth() && x >= getxLocation()
+//				&& y <= getyLocation() + getHeight() && y >= getyLocation());
 	}
 
 	abstract void draw(RendererInterface renderer);

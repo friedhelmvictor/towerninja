@@ -125,14 +125,16 @@ public class Game {
 			mApplet.strokeWeight(12);
 			mApplet.strokeJoin(mApplet.MITER);
 			mApplet.strokeCap(mApplet.PROJECT);
-			mApplet.stroke(color, 64);
+			mApplet.stroke(color, 32);
 			// left hand
 			if (currentPlayer.getLeftSpeed() > MIN_SPEED) {
 				// draw 3 traces of different length over each other
-				for (int i = 0; i < 3; i++) {
+				for (int i = 0; i < 6; i++) {
 					mApplet.beginShape();
-					for (int j = 0; j < currentPlayer.getLeft().size() - (i * 2 + 3); j++) {
-						mApplet.vertex(currentPlayer.getLeft().get(j)[0], currentPlayer.getLeft().get(j)[1]);
+					for (int j = 0; j < currentPlayer.getLeft().size()
+							- (i + 3); j++) {
+						mApplet.vertex(currentPlayer.getLeft().get(j)[0],
+								currentPlayer.getLeft().get(j)[1]);
 					}
 					mApplet.endShape();
 				}
@@ -140,10 +142,12 @@ public class Game {
 			// right hand
 			if (currentPlayer.getRightSpeed() > MIN_SPEED) {
 				// draw 3 traces of different length over each other
-				for (int i = 0; i < 3; i++) {
+				for (int i = 0; i < 6; i++) {
 					mApplet.beginShape();
-					for (int j = 0; j < currentPlayer.getRight().size() - (i * 2 + 3); j++) {
-						mApplet.vertex(currentPlayer.getRight().get(j)[0], currentPlayer.getRight().get(j)[1]);
+					for (int j = 0; j < currentPlayer.getRight().size()
+							- (i + 3); j++) {
+						mApplet.vertex(currentPlayer.getRight().get(j)[0],
+								currentPlayer.getRight().get(j)[1]);
 					}
 					mApplet.endShape();
 				}
@@ -167,15 +171,20 @@ public class Game {
 						if (currentPlayer.getLeftSpeed() > MIN_SPEED
 								&& mTower[i][j] != null) {
 							if (mTower[i][j].contains(currentPlayer.getLeftX(),
-									currentPlayer.getLeftY())) {
+									currentPlayer.getLeftY(),
+									currentPlayer.getLastLeftX(),
+									currentPlayer.getLastLeftY())) {
 								removeStone(i, j);
 							}
 						}
 						// right hand detection
 						if (currentPlayer.getRightSpeed() > MIN_SPEED
 								&& mTower[i][j] != null) {
-							if (mTower[i][j].contains(currentPlayer.getRightX(),
-									currentPlayer.getRightY())) {
+							if (mTower[i][j].contains(
+									currentPlayer.getRightX(),
+									currentPlayer.getRightY(),
+									currentPlayer.getLastRightX(),
+									currentPlayer.getLastRightY())) {
 								removeStone(i, j);
 							}
 						}
@@ -187,8 +196,8 @@ public class Game {
 
 	private void removeStone(int i, int j) {
 		mTower[i][j] = null;
-		if(mTower[i+1][j] != null) {
-			mTower[i][j+1].setjDestination(j);
+		if (mTower[i + 1][j] != null) {
+			mTower[i][j + 1].setjDestination(j);
 		}
 	}
 
