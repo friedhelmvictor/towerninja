@@ -18,7 +18,7 @@ import processing.core.PImage;
  */
 public class Game {
 
-	private final long NEW_STONE_DELAY = 150L;
+	private final long NEW_STONE_DELAY = 1000L;
 	private final float MIN_SPEED = 20;
 	private PApplet mApplet;
 	private AppletRenderer mRenderer;

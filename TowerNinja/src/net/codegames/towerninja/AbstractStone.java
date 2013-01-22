@@ -13,6 +13,7 @@ abstract public class AbstractStone {
 	private float yVelocity = 0.2f;
 	private float xVelocity = 0.1f;
 	private Parabole mPath;
+	private boolean isOnTower = false;
 
 	protected float getxLocation() {
 		return xLocation;
@@ -85,35 +86,47 @@ abstract public class AbstractStone {
 	protected float exactYDestination() {
 		return 430 - (getiDestination() * getHeight());
 	}
-	
+
 	protected Parabole getPath() {
 		return mPath;
 	}
 
 	protected void setTrajectoryTipY(float y) {
-		this.mPath = new Parabole(10, 400, 10+(exactXDestination()-10)/2, y, exactXDestination(), exactYDestination());
+		this.mPath = new Parabole(10, 400, 10 + (exactXDestination() - 10) / 2,
+				y, exactXDestination(), exactYDestination());
 		setxLocation(10);
 		setyLocation(400);
 	}
 
 	public void moveToDestination(float dT) {
-		if (Math.abs(getxLocation() - exactXDestination()) < 5
-				&& Math.abs(getyLocation() - exactYDestination()) < 5)
+		if (isOnTower())
 			;
-		else {
+		// else if (Math.abs(getxLocation() - exactXDestination()) < 5
+		// && Math.abs(getyLocation() - exactYDestination()) < 5)
+		// ;
+		else if (getxLocation() + dT * getxVelocity() > exactXDestination()) {
+			setxLocation(exactXDestination());
+			setyLocation(exactYDestination());
+			setIsOnTower();
+		} else {
 			setxLocation(getxLocation() + dT * getxVelocity());
-//			setyLocation(getyLocation() + dT * getyVelocity());
+			// setyLocation(getyLocation() + dT * getyVelocity());
 			setyLocation(getPath().getY(getxLocation()));
 		}
+	}
+
+	private void setIsOnTower() {
+		isOnTower = true;
+	}
+
+	private boolean isOnTower() {
+		return isOnTower;
 	}
 
 	public boolean contains(float x, float y) {
 		return (x <= getxLocation() + getWidth() && x >= getxLocation()
 				&& y <= getyLocation() + getHeight() && y >= getyLocation());
 	}
-	
-	
-	
 
 	abstract void draw(RendererInterface renderer);
 }
