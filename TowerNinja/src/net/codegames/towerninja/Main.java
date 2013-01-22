@@ -1,6 +1,7 @@
 package net.codegames.towerninja;
 
 import processing.core.PApplet;
+import processing.core.PImage;
 import SimpleOpenNI.SimpleOpenNI;
 
 public class Main extends PApplet {
@@ -34,6 +35,8 @@ public class Main extends PApplet {
 	private Parabole par = new Parabole(1, 0, 3, 6, 5, -2);
 
 	private SimpleOpenNI soni;
+	
+	PImage bg;
 
 	/**
 	 * Initial setup of the Applet. Also creating the {@link Game} and
@@ -52,6 +55,7 @@ public class Main extends PApplet {
 		soni = new SimpleOpenNI(this);
 		tracking = new Tracking(this, soni);
 
+		bg = loadImage(this.getCodeBase() + "../resources/background.png");
 	}
 
 	/**
@@ -60,7 +64,7 @@ public class Main extends PApplet {
 	 * @see processing.core.PApplet#draw()
 	 */
 	public void draw() {
-		background(224);
+		background(bg);
 		game.update(tracking.getPlayers());
 
 		if (DEV_MODE) {
