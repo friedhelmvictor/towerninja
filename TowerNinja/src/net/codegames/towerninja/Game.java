@@ -121,50 +121,33 @@ public class Game {
 			Player currentPlayer = players.get(p);
 			int color = currentPlayer.getColor();
 
+			mApplet.noFill();
+			mApplet.strokeWeight(12);
+			mApplet.strokeJoin(mApplet.MITER);
+			mApplet.strokeCap(mApplet.PROJECT);
+			mApplet.stroke(color, 64);
 			// left hand
-			mApplet.strokeWeight(10);
-			// path of last movement
-			int alpha = (currentPlayer.getLeftSpeed() > MIN_SPEED) ? 96 : 64;
-			mApplet.stroke(color, alpha);
-			for (int i = 0; i < currentPlayer.getLeft().size() - 1; i++) {
-				mApplet.line(currentPlayer.getLeft().get(i)[0], currentPlayer
-						.getLeft().get(i)[1], currentPlayer.getLeft()
-						.get(i + 1)[0], currentPlayer.getLeft().get(i + 1)[1]);
-				mApplet.stroke(color, (int) (alpha * Math.pow(0.67, i)));
-			}
-			// circle for current hand position
 			if (currentPlayer.getLeftSpeed() > MIN_SPEED) {
-				mApplet.fill(color, 192);
-			} else {
-				mApplet.fill(color, 64);
+				// draw 3 traces of different length over each other
+				for (int i = 0; i < 3; i++) {
+					mApplet.beginShape();
+					for (int j = 0; j < currentPlayer.getLeft().size() - (i * 2 + 3); j++) {
+						mApplet.vertex(currentPlayer.getLeft().get(j)[0], currentPlayer.getLeft().get(j)[1]);
+					}
+					mApplet.endShape();
+				}
 			}
-			mApplet.ellipseMode(mApplet.CENTER);
-			mApplet.noStroke();
-			mApplet.ellipse(currentPlayer.getLeftX(), currentPlayer.getLeftY(),
-					20, 20);
-
-			// left hand
-			mApplet.strokeWeight(10);
-			// path of last movement
-			alpha = (currentPlayer.getRightSpeed() > MIN_SPEED) ? 96 : 64;
-			mApplet.stroke(color, alpha);
-			for (int i = 0; i < currentPlayer.getRight().size() - 1; i++) {
-				mApplet.line(currentPlayer.getRight().get(i)[0], currentPlayer
-						.getRight().get(i)[1],
-						currentPlayer.getRight().get(i + 1)[0], currentPlayer
-								.getRight().get(i + 1)[1]);
-				mApplet.stroke(color, (int) (alpha * Math.pow(0.67, i)));
-			}
-			// circle for current hand position
+			// right hand
 			if (currentPlayer.getRightSpeed() > MIN_SPEED) {
-				mApplet.fill(color, 192);
-			} else {
-				mApplet.fill(color, 64);
+				// draw 3 traces of different length over each other
+				for (int i = 0; i < 3; i++) {
+					mApplet.beginShape();
+					for (int j = 0; j < currentPlayer.getRight().size() - (i * 2 + 3); j++) {
+						mApplet.vertex(currentPlayer.getRight().get(j)[0], currentPlayer.getRight().get(j)[1]);
+					}
+					mApplet.endShape();
+				}
 			}
-			mApplet.ellipseMode(mApplet.CENTER);
-			mApplet.noStroke();
-			mApplet.ellipse(currentPlayer.getRightX(),
-					currentPlayer.getRightY(), 20, 20);
 		}
 	}
 
