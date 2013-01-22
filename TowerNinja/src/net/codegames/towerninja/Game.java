@@ -18,7 +18,7 @@ import processing.core.PImage;
  */
 public class Game {
 
-	private final long NEW_STONE_DELAY = 500L;
+	private final long NEW_STONE_DELAY = 150L;
 	private final float MIN_SPEED = 20;
 	private PApplet mApplet;
 	private AppletRenderer mRenderer;
@@ -30,7 +30,7 @@ public class Game {
 	 * added to a certain location, it must not actually be located at that
 	 * position already. It will fly towards that position though.
 	 */
-	private Brick[][] mTower = new Brick[10][4];
+	private Brick[][] mTower = new Brick[8][6];
 
 	/**
 	 * Game constructor
@@ -204,7 +204,7 @@ public class Game {
 
 	private void removeStone(int i, int j) {
 		mTower[i][j] = null;
-		if(mTower[i][j+1] != null) {
+		if(mTower[i+1][j] != null) {
 			mTower[i][j+1].setjDestination(j);
 		}
 	}

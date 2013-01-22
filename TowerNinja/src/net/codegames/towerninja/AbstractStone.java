@@ -12,6 +12,7 @@ abstract public class AbstractStone {
 	// variables for movement
 	private float yVelocity = 0.2f;
 	private float xVelocity = 0.1f;
+	private Parabole mPath;
 
 	protected float getxLocation() {
 		return xLocation;
@@ -85,13 +86,24 @@ abstract public class AbstractStone {
 		return 430 - (getiDestination() * getHeight());
 	}
 	
+	protected Parabole getPath() {
+		return mPath;
+	}
+
+	protected void setTrajectoryTipY(float y) {
+		this.mPath = new Parabole(10, 400, 10+(exactXDestination()-10)/2, y, exactXDestination(), exactYDestination());
+		setxLocation(10);
+		setyLocation(400);
+	}
+
 	public void moveToDestination(float dT) {
-		if (Math.abs(getxLocation() - exactXDestination()) < 1
-				&& Math.abs(getyLocation() - exactYDestination()) < 1)
+		if (Math.abs(getxLocation() - exactXDestination()) < 5
+				&& Math.abs(getyLocation() - exactYDestination()) < 5)
 			;
 		else {
 			setxLocation(getxLocation() + dT * getxVelocity());
-			setyLocation(getyLocation() + dT * getyVelocity());
+//			setyLocation(getyLocation() + dT * getyVelocity());
+			setyLocation(getPath().getY(getxLocation()));
 		}
 	}
 
