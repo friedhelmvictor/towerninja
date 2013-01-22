@@ -15,15 +15,20 @@ public class Main extends PApplet {
 	 * When enabled, displays a frame counter
 	 */
 	private static final boolean DEV_MODE = true;
-
+	
+	/**
+	 * 
+	 */
+	private static final float SIZE_MULTIPLIER = 1.5f;
+	
 	/**
 	 * This is the main class. It should just handle the basic setup, creating
 	 * the game and updating it regularly. Apart from that, the {@link Game}
 	 * Object should take care of things.
 	 */
 	private static final long serialVersionUID = 1L;
-	private int width = 640;
-	private int height = 480;
+	private int width = (int)(SIZE_MULTIPLIER * 640);
+	private int height = (int)(SIZE_MULTIPLIER * 480);
 	private Game game;
 	private Tracking tracking;
 	private Parabole par = new Parabole(1, 0, 3, 6, 5, -2);
