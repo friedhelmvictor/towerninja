@@ -105,9 +105,6 @@ public class Game {
 			for (int j = 0; j < mTower[0].length; j++) {
 				if (mTower[i][j] != null) {
 					mTower[i][j].draw(mRenderer);
-//					PImage img = mApplet.loadImage(mApplet.getCodeBase()+mTower[i][j].getBackground());
-//					mApplet.image(img, mTower[i][j].getxLocation(),
-//							mTower[i][j].getyLocation());
 				}
 			}
 		}
@@ -188,7 +185,7 @@ public class Game {
 								&& mTower[i][j] != null) {
 							if (mTower[i][j].contains(currentPlayer.getLeftX(),
 									currentPlayer.getLeftY())) {
-								mTower[i][j] = null;
+								removeStone(i, j);
 							}
 						}
 						// right hand detection
@@ -196,12 +193,19 @@ public class Game {
 								&& mTower[i][j] != null) {
 							if (mTower[i][j].contains(currentPlayer.getRightX(),
 									currentPlayer.getRightY())) {
-								mTower[i][j] = null;
+								removeStone(i, j);
 							}
 						}
 					}
 				}
 			}
+		}
+	}
+
+	private void removeStone(int i, int j) {
+		mTower[i][j] = null;
+		if(mTower[i][j+1] != null) {
+			mTower[i][j+1].setjDestination(j);
 		}
 	}
 

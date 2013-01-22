@@ -13,7 +13,7 @@ public class Brick extends AbstractStone {
 	}
 
 	@Override
-	void draw(Renderer renderer) {
+	void draw(RendererInterface renderer) {
 		renderer.drawBrick(this);
 		
 	}

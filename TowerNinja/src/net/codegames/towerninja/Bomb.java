@@ -5,12 +5,11 @@ public class Bomb extends Brick {
 	public Bomb(float xLocation, float yLocation, int iDestination,
 			int jDestination) {
 		super(xLocation, yLocation, iDestination, jDestination);
-		setBackground("../resources/bomb.png");
 	}
-	
+
 	@Override
-	void draw(Renderer renderer) {
+	void draw(RendererInterface renderer) {
 		renderer.drawBomb(this);
-		
+
 	}
 }

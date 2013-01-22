@@ -3,7 +3,7 @@ package net.codegames.towerninja;
 import processing.core.PApplet;
 import processing.core.PImage;
 
-public class AppletRenderer implements Renderer {
+public class AppletRenderer implements RendererInterface {
 	private PApplet mApplet;
 	private PImage mBombImage, mBrickImage;
 

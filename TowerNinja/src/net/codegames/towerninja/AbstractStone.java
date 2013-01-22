@@ -12,8 +12,6 @@ abstract public class AbstractStone {
 	// variables for movement
 	private float yVelocity = 0.2f;
 	private float xVelocity = 0.1f;
-	// default image file for drawing
-	private String background = "../resources/brick.png";
 
 	protected float getxLocation() {
 		return xLocation;
@@ -80,19 +78,11 @@ abstract public class AbstractStone {
 	}
 
 	protected float exactXDestination() {
-		return 90 + (getjDestination() * getWidth());
+		return 200 + (getjDestination() * getWidth());
 	}
 
 	protected float exactYDestination() {
-		return 400 - (getiDestination() * getHeight());
-	}
-
-	protected void setBackground(String background) {
-		this.background = background;
-	}
-	
-	public String getBackground() {
-		return background;
+		return 430 - (getiDestination() * getHeight());
 	}
 	
 	public void moveToDestination(float dT) {
@@ -113,5 +103,5 @@ abstract public class AbstractStone {
 	
 	
 
-	abstract void draw(Renderer renderer);
+	abstract void draw(RendererInterface renderer);
 }

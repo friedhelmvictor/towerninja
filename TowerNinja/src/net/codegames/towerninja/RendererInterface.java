@@ -1,6 +1,6 @@
 package net.codegames.towerninja;
 
-public interface Renderer {
+public interface RendererInterface {
 	void drawBrick(Brick brick);
 	void drawBomb(Bomb bomb);
 }
