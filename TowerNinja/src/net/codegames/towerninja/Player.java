@@ -1,66 +1,108 @@
 package net.codegames.towerninja;
 
+import java.awt.Color;
+import java.util.Vector;
+
+/**
+ * A Player represents all Date about a tracked user playing this game. Hand
+ * positions are stored and returned, additionaly the hands speed is always
+ * updated.
+ */
 public class Player {
-	
+
 	private int userId;
-	
-	private float leftX;
-	private float leftY;
-	private float lastLeftX;
-	private float lastLeftY;
-	
-	private float rightX;
-	private float rightY;
-	private float lastRightX;
-	private float lastRightY;
-	
+	private Color color;
+
+	private Vector<Float[]> left = new Vector<Float[]>();
+	private Vector<Float[]> right = new Vector<Float[]>();
+
 	private float leftSpeed;
 	private float rightSpeed;
-	
-	public Player(int userId) {
+
+	private static final int NUMBER_OF_COORDS = 10;
+
+	public Player(int userId, Color color) {
 		this.userId = userId;
+		this.color = color;
 		leftSpeed = 0;
 		rightSpeed = 0;
 	}
 
 	public float getLeftX() {
-		return leftX;
-	}
-
-	public void setLeftX(float leftX) {
-		lastLeftX = this.leftX;
-		this.leftX = leftX;
+		return left.get(0)[0];
 	}
 
 	public float getLeftY() {
-		return leftY;
+		return left.get(0)[1];
+	}
+	
+	public float getLastLeftX() {
+		return left.get(1)[0];
 	}
 
-	public void setLeftY(float leftY) {
-		lastLeftY = this.leftY;
-		this.leftY = leftY;
+	public float getLastLeftY() {
+		return left.get(1)[1];
+	}
+
+	public Vector<Float[]> getLeft() {
+		return left;
+	}
+
+	public void setLeft(float x, float y) {
+		if (left.isEmpty()) {
+			for (int i = 0; i < NUMBER_OF_COORDS; i++) {
+				left.add(0, new Float[] { x, y });
+			}
+		}
+
+		left.add(0, new Float[] { x, y });
+		left.remove(left.size() - 1);
+
+		leftSpeed = (float) Math.sqrt(Math.pow(left.get(0)[0] - left.get(1)[0],
+				2) + Math.pow(left.get(0)[1] - left.get(1)[1], 2));
 	}
 
 	public float getRightX() {
-		return rightX;
-	}
-
-	public void setRightX(float rightX) {
-		lastRightX = this.rightX;
-		this.rightX = rightX;
+		return right.get(0)[0];
 	}
 
 	public float getRightY() {
-		return rightY;
+		return right.get(0)[1];
+	}
+	
+	public float getLastRightX() {
+		return right.get(1)[0];
 	}
 
-	public void setRightY(float rightY) {
-		lastRightY = this.rightY;
-		this.rightY = rightY;
+	public float getLastRightY() {
+		return right.get(1)[1];
+	}
+
+	public Vector<Float[]> getRight() {
+		return right;
+	}
+
+	public void setRight(float x, float y) {
+		if (right.isEmpty()) {
+			for (int i = 0; i < NUMBER_OF_COORDS; i++) {
+				right.add(0, new Float[] { x, y });
+			}
+		}
+
+		right.add(0, new Float[] { x, y });
+		right.remove(right.size() - 1);
+
+		rightSpeed = (float) Math.sqrt(Math.pow(right.get(0)[0]
+				- right.get(1)[0], 2)
+				+ Math.pow(right.get(0)[1] - right.get(1)[1], 2));
 	}
 
 	public int getUserId() {
 		return userId;
+	}
+
+	public int getColor() {
+		return color.getRGB();
 	}
 
 	public float getLeftSpeed() {
@@ -69,11 +111,6 @@ public class Player {
 
 	public float getRightSpeed() {
 		return rightSpeed;
-	}
-	
-	public void updateSpeed() {
-		leftSpeed = (float)Math.sqrt(Math.pow(leftX - lastLeftX, 2) + Math.pow(leftY - lastLeftY, 2));
-		rightSpeed = (float)Math.sqrt(Math.pow(rightX - lastRightX, 2) + Math.pow(rightY - lastRightY, 2));
 	}
 
 }

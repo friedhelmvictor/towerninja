@@ -1,6 +1,7 @@
 package net.codegames.towerninja;
 
 import processing.core.PApplet;
+import processing.core.PImage;
 import SimpleOpenNI.SimpleOpenNI;
 
 public class Main extends PApplet {
@@ -15,19 +16,26 @@ public class Main extends PApplet {
 	 * When enabled, displays a frame counter
 	 */
 	private static final boolean DEV_MODE = true;
-
+	
+	/**
+	 * 
+	 */
+	private static final float SIZE_MULTIPLIER = 1.5f;
+	
 	/**
 	 * This is the main class. It should just handle the basic setup, creating
 	 * the game and updating it regularly. Apart from that, the {@link Game}
 	 * Object should take care of things.
 	 */
 	private static final long serialVersionUID = 1L;
-	private int width = 640;
-	private int height = 480;
+	private int width = (int)(SIZE_MULTIPLIER * 640);
+	private int height = (int)(SIZE_MULTIPLIER * 480);
 	private Game game;
 	private Tracking tracking;
 
 	private SimpleOpenNI soni;
+	
+	PImage bg;
 
 	/**
 	 * Initial setup of the Applet. Also creating the {@link Game} and
@@ -39,12 +47,14 @@ public class Main extends PApplet {
 
 		size(width, height);
 		frameRate(30);
+		smooth();
 
 		game = new Game(this);
 
 		soni = new SimpleOpenNI(this);
 		tracking = new Tracking(this, soni);
 
+		bg = loadImage(this.getCodeBase() + "../resources/background.png");
 	}
 
 	/**
@@ -53,18 +63,21 @@ public class Main extends PApplet {
 	 * @see processing.core.PApplet#draw()
 	 */
 	public void draw() {
-		background(128);
+		background(bg);
 		game.update(tracking.getPlayers());
 
 		if (DEV_MODE) {
-			displayFramerate();
+			displayDevOutput();
 		}
 	}
 
-	private void displayFramerate() {
-		fill(255);
+	private void displayDevOutput() {
+		fill(64);
 		noStroke();
-		text((int) frameRate, 10, 20);
+		text("FPS: " + (int) frameRate, 10, 20);
+		
+		Runtime rt = Runtime.getRuntime();
+		text("Memory: " + Math.round((rt.totalMemory() - rt.freeMemory())/(1024*1024)) + " MB", 10, 35);
 	}
 
 	/**

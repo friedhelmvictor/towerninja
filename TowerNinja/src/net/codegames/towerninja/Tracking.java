@@ -1,22 +1,36 @@
 package net.codegames.towerninja;
 
+import java.awt.Color;
 import java.util.Vector;
 
 import processing.core.PApplet;
+import processing.core.PImage;
 import processing.core.PVector;
 import SimpleOpenNI.SimpleOpenNI;
 
 /**
  * Provides constantly a list of all users currently tracked by the 3D camera.
  * Data is returned as a vector of {@link Player}s.
- * 
- * @author Frido
  */
 public class Tracking {
 
 	private SimpleOpenNI soni;
+
+	private PApplet mApplet;
+
+	private float sizeMultiplier;
+	
 	private Vector<Integer> actualUsers = new Vector<Integer>();
 	Vector<Player> players = new Vector<Player>();
+
+	private Color[] colors = { new Color(79, 12, 77), // violett
+			new Color(27, 64, 120), // blue
+			new Color(45, 120, 33) // green
+	};
+
+	private int drawShadows = 0;
+	private int[] userMap;
+	private PImage userImage;
 
 	/**
 	 * Initializes Player Tracking with the Main applet and SimpleOpenNi.
@@ -34,13 +48,19 @@ public class Tracking {
 			this.soni.enableUser(SimpleOpenNI.SKEL_PROFILE_HEAD_HANDS);
 			this.soni.setMirror(true);
 		}
+
+		mApplet = applet;
+		userMap = new int[soni.depthWidth() * soni.depthHeight()];
+		userImage = mApplet.createImage(mApplet.width, mApplet.height,
+				mApplet.ARGB);
+		
+		sizeMultiplier = (float) mApplet.width / soni.depthWidth();
 	}
 
 	/**
 	 * Determines if a user is currently visible to the 3D camera.
 	 * 
-	 * @param userId
-	 *            ID of a user
+	 * @param userId ID of a user
 	 * @return true if the user is currently visible
 	 */
 	private boolean userTracked(int userId) {
@@ -90,16 +110,12 @@ public class Tracking {
 					soni.getJointPositionSkeleton(userId,
 							SimpleOpenNI.SKEL_LEFT_HAND, spatial);
 					soni.convertRealWorldToProjective(spatial, projection);
-					players.get(p).setLeftX(projection.x);
-					players.get(p).setLeftY(projection.y);
+					players.get(p).setLeft(sizeMultiplier * projection.x, sizeMultiplier * projection.y);
 
 					soni.getJointPositionSkeleton(userId,
 							SimpleOpenNI.SKEL_RIGHT_HAND, spatial);
 					soni.convertRealWorldToProjective(spatial, projection);
-					players.get(p).setRightX(projection.x);
-					players.get(p).setRightY(projection.y);
-
-					players.get(p).updateSpeed();
+					players.get(p).setRight(sizeMultiplier * projection.x, sizeMultiplier * projection.y);
 
 					// remove handled user from actualUsers for second loop
 					actualUsers.remove(u);
@@ -114,7 +130,7 @@ public class Tracking {
 		for (int u = 0; u < actualUsers.size(); u++) {
 
 			int userId = actualUsers.get(u);
-			Player player = new Player(userId);
+			Player player = new Player(userId, colors[userId % colors.length]);
 
 			PVector spatial = new PVector();
 			PVector projection = new PVector();
@@ -122,14 +138,12 @@ public class Tracking {
 			soni.getJointPositionSkeleton(userId, SimpleOpenNI.SKEL_LEFT_HAND,
 					spatial);
 			soni.convertRealWorldToProjective(spatial, projection);
-			player.setLeftX(projection.x);
-			player.setLeftY(projection.y);
+			player.setLeft(sizeMultiplier * projection.x, sizeMultiplier * projection.y);
 
 			soni.getJointPositionSkeleton(userId, SimpleOpenNI.SKEL_RIGHT_HAND,
 					spatial);
 			soni.convertRealWorldToProjective(spatial, projection);
-			player.setRightX(projection.x);
-			player.setRightY(projection.y);
+			player.setRight(sizeMultiplier * projection.x, sizeMultiplier * projection.y);
 
 			players.add(player);
 
@@ -153,6 +167,7 @@ public class Tracking {
 			}
 		}
 
+		drawShadows();
 	}
 
 	/**
@@ -167,6 +182,43 @@ public class Tracking {
 		}
 		updatePlayers();
 		return players;
+	}
+
+	/**
+	 * Draws the shadow images of currently tracked players in their respective
+	 * colors on the background.
+	 */
+	private void drawShadows() {
+		// refresh the image only every third frame
+		drawShadows = (drawShadows + 1) % 3;
+		if ((drawShadows % 3) != 0 && players.size() > 0) {
+			mApplet.image(userImage, 0, 0);
+			return;
+		}
+
+		userImage = mApplet.createImage(mApplet.width, mApplet.height,
+				mApplet.ARGB);
+		soni.getUserPixels(SimpleOpenNI.USERS_ALL, userMap);
+		int blockWidth = (int) (sizeMultiplier * 8);
+		for (int y = 0; y < soni.depthHeight(); y += 8) {
+			for (int x = 0; x < soni.depthWidth(); x += 8) {
+				int i = x + y * soni.depthWidth();
+				for (int p = 0; p < players.size(); p++) {
+					if (userMap[i] == players.get(p).getUserId()) {
+						// paint whole block (normally 12 x 12 pixels)
+						for (int j = 0; j < blockWidth; j++) {
+							for (int k = 0; k < blockWidth; k++) {
+								userImage.pixels[(int) (x * sizeMultiplier) + j
+										+ (((int) (y * sizeMultiplier + k)) * mApplet.width)] = 
+										players.get(p).getColor() & 0x30FFFFFF;
+							}
+						}
+					}
+				}
+			}
+		}
+		userImage.updatePixels();
+		mApplet.image(userImage, 0, 0);
 	}
 
 }

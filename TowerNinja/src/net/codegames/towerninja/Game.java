@@ -5,6 +5,7 @@ import java.awt.geom.Line2D;
 import java.util.Vector;
 
 import processing.core.PApplet;
+import processing.core.PImage;
 
 // kennt alle steine
 // kennt Turm
@@ -17,9 +18,10 @@ import processing.core.PApplet;
  */
 public class Game {
 
-	private final long NEW_STONE_DELAY = 500L;
+	private final long NEW_STONE_DELAY = 1000L;
 	private final float MIN_SPEED = 20;
 	private PApplet mApplet;
+	private AppletRenderer mRenderer;
 	private long mLastTimeStamp = System.currentTimeMillis();
 
 	/**
@@ -28,7 +30,7 @@ public class Game {
 	 * added to a certain location, it must not actually be located at that
 	 * position already. It will fly towards that position though.
 	 */
-	private Stone[][] tower = new Stone[10][4];
+	private Brick[][] mTower = new Brick[8][6];
 
 	/**
 	 * Game constructor
@@ -38,12 +40,9 @@ public class Game {
 	 */
 	public Game(PApplet applet) {
 		this.mApplet = applet;
+		this.mRenderer = new AppletRenderer(mApplet);
 	}
 
-	/**
-	 * 
-	 * @param players
-	 */
 	public void update(Vector<Player> players) {
 
 		if (System.currentTimeMillis() - mLastTimeStamp > NEW_STONE_DELAY) {
@@ -51,34 +50,10 @@ public class Game {
 			createStone();
 		}
 
+		drawPlayerHands(players);
 		detectSlices(players);
-
 		moveStones();
-
 		drawStones();
-
-		// steine erzeugen
-		// steine bewegen
-
-		mApplet.ellipseMode(mApplet.CENTER);
-		// display left hand
-		for (int i = 0; i < players.size(); i++) {
-			float x = players.get(i).getLeftX();
-			float y = players.get(i).getLeftY();
-			mApplet.fill(255, 0, 0);
-			mApplet.ellipse(x, y, 20, 20);
-			mApplet.fill(0);
-			mApplet.text(players.get(i).getUserId(), x, y);
-		}
-		// display right hand
-		for (int i = 0; i < players.size(); i++) {
-			float x = players.get(i).getRightX();
-			float y = players.get(i).getRightY();
-			mApplet.fill(0, 255, 0);
-			mApplet.ellipse(x, y, 20, 20);
-			mApplet.fill(0);
-			mApplet.text(players.get(i).getUserId(), x, y);
-		}
 	}
 
 	/**
@@ -87,10 +62,10 @@ public class Game {
 	 * @param dT
 	 */
 	private void moveStones() {
-		for (int i = 0; i < tower.length; i++) {
-			for (int j = 0; j < tower[0].length; j++) {
-				if (tower[i][j] != null) {
-					tower[i][j].moveToDestination(mApplet.frameRate);
+		for (int i = 0; i < mTower.length; i++) {
+			for (int j = 0; j < mTower[0].length; j++) {
+				if (mTower[i][j] != null) {
+					mTower[i][j].moveToDestination(mApplet.frameRate);
 				}
 			}
 		}
@@ -101,19 +76,19 @@ public class Game {
 	 * leftmost free spot. It then creates a stone for that spot and returns its
 	 * reference
 	 * 
-	 * @return a reference to the next {@link Stone}
+	 * @return a reference to the next {@link Brick}
 	 */
-	private Stone createStone() {
-		towerHeightLoop: for (int i = 0; i < tower.length; i++) {
-			for (int j = 0; j < tower[0].length; j++) {
-				if (tower[i][j] == null) {
+	private Brick createStone() {
+		for (int i = 0; i < mTower.length; i++) {
+			for (int j = 0; j < mTower[0].length; j++) {
+				if (mTower[i][j] == null) {
 					double rand = Math.random();
 					if (rand < 0.75d) {
-						tower[i][j] = new Stone(50, 5, i, j);
+						mTower[i][j] = new Brick(50, 5, i, j);
 					} else {
-						tower[i][j] = new Bomb(50, 5, i, j);
+						mTower[i][j] = new Bomb(50, 5, i, j);
 					}
-					return tower[i][j];
+					return mTower[i][j];
 					// break towerHeightLoop;
 				}
 			}
@@ -125,12 +100,56 @@ public class Game {
 	 * draws every stone
 	 */
 	private void drawStones() {
-		for (int i = 0; i < tower.length; i++) {
-			for (int j = 0; j < tower[0].length; j++) {
-				if (tower[i][j] != null) {
-					mApplet.rect(tower[i][j].getxLocation(),
-							tower[i][j].getyLocation(), tower[i][j].getWidth(),
-							tower[i][j].getHeight());
+		mApplet.fill(64);
+		for (int i = 0; i < mTower.length; i++) {
+			for (int j = 0; j < mTower[0].length; j++) {
+				if (mTower[i][j] != null) {
+					mTower[i][j].draw(mRenderer);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Draws the hand positions of every player.
+	 * 
+	 * @param players
+	 *            vector of all {@link Player}s
+	 */
+	private void drawPlayerHands(Vector<Player> players) {
+		for (int p = 0; p < players.size(); p++) {
+			Player currentPlayer = players.get(p);
+			int color = currentPlayer.getColor();
+
+			mApplet.noFill();
+			mApplet.strokeWeight(12);
+			mApplet.strokeJoin(mApplet.MITER);
+			mApplet.strokeCap(mApplet.PROJECT);
+			mApplet.stroke(color, 32);
+			// left hand
+			if (currentPlayer.getLeftSpeed() > MIN_SPEED) {
+				// draw 3 traces of different length over each other
+				for (int i = 0; i < 6; i++) {
+					mApplet.beginShape();
+					for (int j = 0; j < currentPlayer.getLeft().size()
+							- (i + 3); j++) {
+						mApplet.vertex(currentPlayer.getLeft().get(j)[0],
+								currentPlayer.getLeft().get(j)[1]);
+					}
+					mApplet.endShape();
+				}
+			}
+			// right hand
+			if (currentPlayer.getRightSpeed() > MIN_SPEED) {
+				// draw 3 traces of different length over each other
+				for (int i = 0; i < 6; i++) {
+					mApplet.beginShape();
+					for (int j = 0; j < currentPlayer.getRight().size()
+							- (i + 3); j++) {
+						mApplet.vertex(currentPlayer.getRight().get(j)[0],
+								currentPlayer.getRight().get(j)[1]);
+					}
+					mApplet.endShape();
 				}
 			}
 		}
@@ -140,27 +159,33 @@ public class Game {
 	 * Checks for all flying stones if a player currently slices them.
 	 * 
 	 * @param players
+	 *            vector of all {@link Player}s
 	 */
 	private void detectSlices(Vector<Player> players) {
-		for (int i = 0; i < tower.length; i++) {
-			for (int j = 0; j < tower[0].length; j++) {
-				if (tower[i][j] != null) {
+		for (int i = 0; i < mTower.length; i++) {
+			for (int j = 0; j < mTower[0].length; j++) {
+				if (mTower[i][j] != null) {
 					for (int p = 0; p < players.size(); p++) {
 						Player currentPlayer = players.get(p);
 						// left hand detection
 						if (currentPlayer.getLeftSpeed() > MIN_SPEED
-								&& tower[i][j] != null) {
-							if (tower[i][j].contains(currentPlayer.getLeftX(),
-									currentPlayer.getLeftY())) {
-								tower[i][j] = null;
+								&& mTower[i][j] != null) {
+							if (mTower[i][j].contains(currentPlayer.getLeftX(),
+									currentPlayer.getLeftY(),
+									currentPlayer.getLastLeftX(),
+									currentPlayer.getLastLeftY())) {
+								removeStone(i, j);
 							}
 						}
 						// right hand detection
 						if (currentPlayer.getRightSpeed() > MIN_SPEED
-								&& tower[i][j] != null) {
-							if (tower[i][j].contains(currentPlayer.getRightX(),
-									currentPlayer.getRightY())) {
-								tower[i][j] = null;
+								&& mTower[i][j] != null) {
+							if (mTower[i][j].contains(
+									currentPlayer.getRightX(),
+									currentPlayer.getRightY(),
+									currentPlayer.getLastRightX(),
+									currentPlayer.getLastRightY())) {
+								removeStone(i, j);
 							}
 						}
 					}
@@ -168,4 +193,12 @@ public class Game {
 			}
 		}
 	}
+
+	private void removeStone(int i, int j) {
+		mTower[i][j] = null;
+		if (mTower[i + 1][j] != null) {
+			mTower[i][j + 1].setjDestination(j);
+		}
+	}
+
 }

@@ -1,18 +1,15 @@
 package net.codegames.towerninja;
 
-public class Bomb extends Stone {
+public class Bomb extends Brick {
 
-	private float width = 50;
-	
 	public Bomb(float xLocation, float yLocation, int iDestination,
 			int jDestination) {
 		super(xLocation, yLocation, iDestination, jDestination);
-		// TODO Auto-generated constructor stub
-	}
-	
-	public float getWidth() {
-		return width;
 	}
 
+	@Override
+	void draw(RendererInterface renderer) {
+		renderer.drawBomb(this);
 
+	}
 }
