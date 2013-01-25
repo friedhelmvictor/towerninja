@@ -1,11 +1,8 @@
 package net.codegames.towerninja;
 
-import java.awt.Rectangle;
-import java.awt.geom.Line2D;
 import java.util.Vector;
 
 import processing.core.PApplet;
-import processing.core.PImage;
 
 // kennt alle steine
 // kennt Turm
@@ -23,14 +20,18 @@ public class Game {
 	private PApplet mApplet;
 	private AppletRenderer mRenderer;
 	private long mLastTimeStamp = System.currentTimeMillis();
-
+	public Scoreboard scoreboard = new Scoreboard();
+	public Score score;
+	
+	private static final int TOWER_HIGHT = 8;
+	private static final int TOWER_WIDTH = 6;
 	/**
 	 * A tower represented by a 2-dimensional array. the first dimension
 	 * describes the towers width. The second its height. When a new stone is
 	 * added to a certain location, it must not actually be located at that
 	 * position already. It will fly towards that position though.
 	 */
-	private Brick[][] mTower = new Brick[8][6];
+	private Brick[][] mTower = new Brick[TOWER_HIGHT][TOWER_WIDTH];
 
 	/**
 	 * Game constructor
@@ -41,6 +42,7 @@ public class Game {
 	public Game(PApplet applet) {
 		this.mApplet = applet;
 		this.mRenderer = new AppletRenderer(mApplet);
+		score = new Score();
 	}
 
 	public void update(Vector<Player> players) {
@@ -54,6 +56,7 @@ public class Game {
 		detectSlices(players);
 		moveStones();
 		drawStones();
+
 	}
 
 	/**
@@ -65,7 +68,13 @@ public class Game {
 		for (int i = 0; i < mTower.length; i++) {
 			for (int j = 0; j < mTower[0].length; j++) {
 				if (mTower[i][j] != null) {
-					mTower[i][j].moveToDestination(mApplet.frameRate);
+					if (!mTower[i][j].isOnTower()){
+						mTower[i][j].moveToDestination(mApplet.frameRate);
+						if (mTower[i][j].isOnTower()){
+							score.addScore(mTower[i][j].getPoints());
+						}
+					}
+					
 				}
 			}
 		}
@@ -173,7 +182,9 @@ public class Game {
 							if (mTower[i][j].contains(currentPlayer.getLeftX(),
 									currentPlayer.getLeftY(),
 									currentPlayer.getLastLeftX(),
-									currentPlayer.getLastLeftY())) {
+									currentPlayer.getLastLeftY())
+									&& !mTower[i][j].isOnTower()
+									) {
 								removeStone(i, j);
 							}
 						}
@@ -184,7 +195,9 @@ public class Game {
 									currentPlayer.getRightX(),
 									currentPlayer.getRightY(),
 									currentPlayer.getLastRightX(),
-									currentPlayer.getLastRightY())) {
+									currentPlayer.getLastRightY())
+									&& !mTower[i][j].isOnTower()
+									) {
 								removeStone(i, j);
 							}
 						}
@@ -195,10 +208,10 @@ public class Game {
 	}
 
 	private void removeStone(int i, int j) {
+		score.addScore(-1 * mTower[i][j].getPoints());
 		mTower[i][j] = null;
 		if (mTower[i + 1][j] != null) {
 			mTower[i][j + 1].setjDestination(j);
 		}
 	}
-
 }

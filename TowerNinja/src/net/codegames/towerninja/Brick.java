@@ -11,7 +11,7 @@ public class Brick extends AbstractStone {
 		setxVelocity((exactXDestination() - xLocation) / 5000);
 		setyVelocity((exactYDestination() - yLocation) / 5000);
 		setTrajectoryTipY(50);
-		
+		setPoints(5);
 	}
 
 	@Override

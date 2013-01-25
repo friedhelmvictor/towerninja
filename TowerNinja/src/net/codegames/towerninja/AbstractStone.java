@@ -18,7 +18,9 @@ abstract public class AbstractStone {
 	private float xVelocity = 0.1f;
 	private Parabole mPath;
 	private boolean isOnTower = false;
-
+	//points a stone gives when hit tower or loose when sliced
+	private int points = 0;
+	
 	protected float getxLocation() {
 		return xLocation;
 	}
@@ -123,7 +125,7 @@ abstract public class AbstractStone {
 		isOnTower = true;
 	}
 
-	private boolean isOnTower() {
+	public boolean isOnTower() {
 		return isOnTower;
 	}
 
@@ -135,4 +137,12 @@ abstract public class AbstractStone {
 	}
 
 	abstract void draw(RendererInterface renderer);
+
+	protected int getPoints() {
+		return points;
+	}
+
+	protected void setPoints(int points) {
+		this.points = points;
+	}
 }

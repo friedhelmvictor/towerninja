@@ -1,10 +1,19 @@
 package net.codegames.towerninja;
 
+import java.io.BufferedOutputStream;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.*;
 import processing.core.PApplet;
 
 
-public class Scoreboard extends PApplet {
+public class Scoreboard extends PApplet implements java.io.Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private static int lenght = 10;
 	private List<Score> scores = new ArrayList<Score>();
 	
@@ -17,15 +26,9 @@ public class Scoreboard extends PApplet {
 	 */
 	public int addScore(Score score)
 	{
-		int position = 0;
-		for (int i = scores.size()-1; i > 0; i++) {
-			if(scores.get(i).score() > score.score()){
-				position = i;
-				break;
-			}
-		}
-		scores.add(position, score);
-		return position;
+		scores.add(score);
+		Collections.sort(scores);
+		return scores.indexOf(score);
 	}
 	
 	/**
@@ -37,12 +40,52 @@ public class Scoreboard extends PApplet {
 		return scores.toArray(new Score[scores.size()]);
 	}
 	
-	public void display() {
-		Score[] scoreboard = this.giveScoreboard();
-		for(int i = 0; i < scoreboard.length; i++){
-			text(scoreboard[i].getName(), 10, 20 + i*30);
-			text(scoreboard[i].getScore(),200,20 + i*30);
-		}		
+	public void save(String filename)
+	{
+		
+		try
+		{
+			
+			
+		// Write to disk with FileOutputStream
+		FileOutputStream f_out = new FileOutputStream(filename);
+
+		// Write object with ObjectOutputStream
+		ObjectOutputStream obj_out = new ObjectOutputStream (f_out);
+
+		// Write object out to disk
+		obj_out.writeObject ( this );
+		}
+		catch(Exception e)
+		{}		
 	}
+	
+	public Scoreboard load(String file)
+	{
+		try
+		{
+			// Read from disk using FileInputStream
+			FileInputStream f_in = new FileInputStream(file);
+
+			// Read object using ObjectInputStream
+			ObjectInputStream obj_in = 
+				new ObjectInputStream (f_in);
+
+			// Read an object
+			Object obj = obj_in.readObject();
+
+			if (obj instanceof Scoreboard)
+			{
+				
+				Scoreboard scoreboard_new = (Scoreboard) obj;
+				return scoreboard_new;
+			}
+		}
+		catch(Exception e){
+			System.out.println(e);
+		}
+		return null;
+	}
+	
 	
 }
