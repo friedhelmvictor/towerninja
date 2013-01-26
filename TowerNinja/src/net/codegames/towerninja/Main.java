@@ -15,7 +15,7 @@ public class Main extends PApplet {
 	/**
 	 * When enabled, displays a frame counter
 	 */
-	private static final boolean DEV_MODE = true;
+	private static final boolean DEV_MODE = false;
 	
 	/**
 	 * 
@@ -28,8 +28,8 @@ public class Main extends PApplet {
 	 * Object should take care of things.
 	 */
 	private static final long serialVersionUID = 1L;
-	private int width = (int)(SIZE_MULTIPLIER * 640);
-	private int height = (int)(SIZE_MULTIPLIER * 480);
+	public static int width = (int)(SIZE_MULTIPLIER * 640);
+	public static int height = (int)(SIZE_MULTIPLIER * 480);
 	private Game game;
 	private Tracking tracking;
 

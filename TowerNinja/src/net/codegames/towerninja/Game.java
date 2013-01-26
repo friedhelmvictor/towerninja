@@ -15,7 +15,7 @@ import processing.core.PApplet;
  */
 public class Game {
 
-	private final long NEW_STONE_DELAY = 1000L;
+	private final long NEW_STONE_DELAY = 500L;
 	private final float MIN_SPEED = 20;
 	private PApplet mApplet;
 	private AppletRenderer mRenderer;
@@ -144,7 +144,7 @@ public class Game {
 			for (int j = 0; j < mTower[0].length; j++) {
 				if (mTower[i][j] == null) {
 					double rand = Math.random();
-					if (rand < 0.75d) {
+					if (rand < 0.67d) {
 						mTower[i][j] = new Brick(50, 5, i, j);
 					} else {
 						mTower[i][j] = new Bomb(50, 5, i, j);

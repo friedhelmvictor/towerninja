@@ -44,7 +44,7 @@ abstract public class AbstractStone {
 	protected void setDestination(float iDestination, float jDestination) {
 		this.iDestination = iDestination;
 		this.jDestination = jDestination;
-		this.mPath = new Parabole(10, 400, 10 + (exactXDestination() - 10) / 2,
+		this.mPath = new Parabole(10, Main.height, 10 + (exactXDestination() - 10) / 2,
 				50, exactXDestination(), exactYDestination());
 	}
 
@@ -52,7 +52,7 @@ abstract public class AbstractStone {
 			float jDestination) {
 		this.iDestination = iDestination;
 		this.jDestination = jDestination;
-		this.mPath = new Parabole(10, 400, getxLocation(), getyLocation(),
+		this.mPath = new Parabole(10, Main.height, getxLocation(), getyLocation(),
 				exactXDestination(), exactYDestination());
 	}
 
@@ -97,7 +97,7 @@ abstract public class AbstractStone {
 	}
 
 	protected float exactYDestination() {
-		return 430 - (getiDestination() * getHeight());
+		return 600 - (getiDestination() * getHeight());
 	}
 
 	protected Parabole getPath() {
