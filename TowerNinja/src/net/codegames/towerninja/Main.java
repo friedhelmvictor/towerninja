@@ -10,12 +10,12 @@ public class Main extends PApplet {
 	 * Set the value of KINECT_PRESENT to true if you actually have one
 	 * connected. Otherwise you won't be able to start the program.
 	 */
-	public static final boolean KINECT_PRESENT = true;
+	public static final boolean KINECT_PRESENT = false;
 
 	/**
 	 * When enabled, displays a frame counter
 	 */
-	private static final boolean DEV_MODE = false;
+	private static final boolean DEV_MODE = true;
 	
 	/**
 	 * 

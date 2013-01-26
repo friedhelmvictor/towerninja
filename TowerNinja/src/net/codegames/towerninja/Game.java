@@ -26,12 +26,12 @@ public class Game {
 	private static final int TOWER_HEIGHT = 8;
 	private static final int TOWER_WIDTH = 6;
 	/**
-	 * A tower represented by a 2-dimensional array. the first dimension
+	 * A tower represented by a 2-dimensional data strucure. the first dimension
 	 * describes the towers width. The second its height. When a new stone is
 	 * added to a certain location, it must not actually be located at that
 	 * position already. It will fly towards that position though.
 	 */
-	private Brick[][] mTower = new Brick[TOWER_HEIGHT][TOWER_WIDTH];
+	private Vector<Brick[]> tower = new Vector<Brick[]>();
 
 	/**
 	 * Game constructor
@@ -43,6 +43,10 @@ public class Game {
 		this.mApplet = applet;
 		this.mRenderer = new AppletRenderer(mApplet);
 		score = new Score();
+
+		for (int i = 0; i < TOWER_HEIGHT; i++) {
+			tower.add(new Brick[TOWER_WIDTH]);
+		}
 	}
 
 	public void update(Vector<Player> players) {
@@ -63,15 +67,15 @@ public class Game {
 	 * Moves all stones for the passed number of frames.
 	 */
 	private void moveStones() {
-		for (int i = 0; i < mTower.length; i++) {
-			for (int j = 0; j < mTower[0].length; j++) {
-				if (mTower[i][j] != null) {
-					if (!mTower[i][j].isOnTower()) {
-						mTower[i][j].moveToDestination(mApplet.frameRate);
-						if (mTower[i][j].isOnTower()) {
-							score.addScore(mTower[i][j].getPoints());
+		for (int i = 0; i < tower.size(); i++) {
+			for (int j = 0; j < tower.get(i).length; j++) {
+				if (tower.get(i)[j] != null) {
+					if (!tower.get(i)[j].isOnTower()) {
+						tower.get(i)[j].moveToDestination(mApplet.frameRate);
+						if (tower.get(i)[j].isOnTower()) {
+							score.addScore(tower.get(i)[j].getPoints());
 
-							if (mTower[i][j] instanceof Bomb) {
+							if (tower.get(i)[j] instanceof Bomb) {
 								handleExplosion(i, j);
 							}
 						}
@@ -99,7 +103,7 @@ public class Game {
 
 		for (int x = rowStart; x <= rowEnd; x++) {
 			for (int y = columnStart; y <= columnEnd; y++) {
-				if (mTower[x][y] != null && mTower[x][y].isOnTower()) {
+				if (tower.get(x)[y] != null && tower.get(x)[y].isOnTower()) {
 					removeStone(x, y);
 				}
 			}
@@ -112,19 +116,20 @@ public class Game {
 	 * that stones don't land "floating in the air".
 	 */
 	private void updateDestinations() {
-		for (int i = 0; i < mTower.length; i++) {
-			for (int j = 0; j < mTower[0].length; j++) {
-				if (mTower[i][j] != null && !mTower[i][j].isOnTower()) {
+		for (int i = 0; i < tower.size(); i++) {
+			for (int j = 0; j < tower.get(i).length; j++) {
+				if (tower.get(i)[j] != null && !tower.get(i)[j].isOnTower()) {
 					int minRow = Integer.MAX_VALUE;
 					for (int k = i - 1; k >= 0; k--) {
-						if (mTower[k][j] == null) {
+						if (tower.get(k)[j] == null) {
 							minRow = k;
 						}
 					}
 					if (minRow < Integer.MAX_VALUE) {
-						mTower[minRow][j] = mTower[i][j];
-						mTower[minRow][j].updatePathWithLastPosition(minRow, j);
-						mTower[i][j] = null;
+						tower.get(minRow)[j] = tower.get(i)[j];
+						tower.get(minRow)[j].updatePathWithLastPosition(minRow,
+								j);
+						tower.get(i)[j] = null;
 					}
 				}
 			}
@@ -140,16 +145,16 @@ public class Game {
 	 */
 	private Brick createStone() {
 		updateDestinations();
-		for (int i = 0; i < mTower.length; i++) {
-			for (int j = 0; j < mTower[0].length; j++) {
-				if (mTower[i][j] == null) {
+		for (int i = 0; i < tower.size(); i++) {
+			for (int j = 0; j < tower.get(i).length; j++) {
+				if (tower.get(i)[j] == null) {
 					double rand = Math.random();
 					if (rand < 0.67d) {
-						mTower[i][j] = new Brick(50, 5, i, j);
+						tower.get(i)[j] = new Brick(50, 5, i, j);
 					} else {
-						mTower[i][j] = new Bomb(50, 5, i, j);
+						tower.get(i)[j] = new Bomb(50, 5, i, j);
 					}
-					return mTower[i][j];
+					return tower.get(i)[j];
 				}
 			}
 		}
@@ -161,10 +166,10 @@ public class Game {
 	 */
 	private void drawStones() {
 		mApplet.fill(64);
-		for (int i = 0; i < mTower.length; i++) {
-			for (int j = 0; j < mTower[0].length; j++) {
-				if (mTower[i][j] != null) {
-					mTower[i][j].draw(mRenderer);
+		for (int i = 0; i < tower.size(); i++) {
+			for (int j = 0; j < tower.get(0).length; j++) {
+				if (tower.get(i)[j] != null) {
+					tower.get(i)[j].draw(mRenderer);
 				}
 			}
 		}
@@ -222,32 +227,33 @@ public class Game {
 	 *            vector of all {@link Player}s
 	 */
 	private void detectSlices(Vector<Player> players) {
-		for (int i = 0; i < mTower.length; i++) {
-			for (int j = 0; j < mTower[0].length; j++) {
-				if (mTower[i][j] != null) {
+		for (int i = 0; i < tower.size(); i++) {
+			for (int j = 0; j < tower.get(0).length; j++) {
+				if (tower.get(i)[j] != null) {
 					for (int p = 0; p < players.size(); p++) {
 						Player currentPlayer = players.get(p);
 						// left hand detection
 						if (currentPlayer.getLeftSpeed() > MIN_SPEED
-								&& mTower[i][j] != null) {
-							if (mTower[i][j].contains(currentPlayer.getLeftX(),
+								&& tower.get(i)[j] != null) {
+							if (tower.get(i)[j].contains(
+									currentPlayer.getLeftX(),
 									currentPlayer.getLeftY(),
 									currentPlayer.getLastLeftX(),
 									currentPlayer.getLastLeftY())
-									&& !mTower[i][j].isOnTower()) {
+									&& !tower.get(i)[j].isOnTower()) {
 								removeStone(i, j);
 								updateDestinations();
 							}
 						}
 						// right hand detection
 						if (currentPlayer.getRightSpeed() > MIN_SPEED
-								&& mTower[i][j] != null) {
-							if (mTower[i][j].contains(
+								&& tower.get(i)[j] != null) {
+							if (tower.get(i)[j].contains(
 									currentPlayer.getRightX(),
 									currentPlayer.getRightY(),
 									currentPlayer.getLastRightX(),
 									currentPlayer.getLastRightY())
-									&& !mTower[i][j].isOnTower()) {
+									&& !tower.get(i)[j].isOnTower()) {
 								removeStone(i, j);
 								updateDestinations();
 							}
@@ -259,7 +265,7 @@ public class Game {
 	}
 
 	private void removeStone(int i, int j) {
-		score.addScore(-1 * mTower[i][j].getPoints());
-		mTower[i][j] = null;
+		score.addScore(-1 * tower.get(i)[j].getPoints());
+		tower.get(i)[j] = null;
 	}
 }
