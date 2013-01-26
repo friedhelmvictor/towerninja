@@ -11,13 +11,15 @@ abstract public class AbstractStone {
 	// Relative destination in the tower where the Stone is to be put.
 	private float iDestination, jDestination;
 	// Width and height of the stone
-	private float width = 72;
-	private float height = 48;
+	private float width = 84;
+	private float height = 60;
 	// variables for movement
 	private float yVelocity = 0.2f;
 	private float xVelocity = 0.1f;
 	private Parabole mPath;
 	private boolean isOnTower = false;
+	private boolean isDestroyed = false;
+	private int destroyTimer = 10;
 	// points a stone gives when hit tower or loose when sliced
 	private int points = 0;
 
@@ -94,13 +96,12 @@ abstract public class AbstractStone {
 	}
 
 	protected float exactXDestination() {
-		return (Main.width / 2) + 6 - (2.5f * (getWidth() + 12))
-				+ (getjDestination() * (getWidth() + 12));
+		return (Main.width / 2) - (2.5f * (getWidth()))
+				+ (getjDestination() * (getWidth()));
 	}
 
 	protected float exactYDestination() {
-		return Main.height - ((getiDestination() + 1) * (getHeight() + 12))
-				+ 12;
+		return Main.height + 6 - ((getiDestination() + 1) * (getHeight()));
 	}
 
 	protected Parabole getPath() {
@@ -156,5 +157,21 @@ abstract public class AbstractStone {
 
 	protected void setPoints(int points) {
 		this.points = points;
+	}
+	
+	protected void setDestroyed(boolean destroyed) {
+		this.isDestroyed = destroyed;
+	}
+	
+	protected boolean isDestroyed() {
+		return isDestroyed;
+	}
+	
+	protected int getDestroyTimer() {
+		return destroyTimer;
+	}
+	
+	protected void decreaseDestroyTime() {
+		destroyTimer--;
 	}
 }

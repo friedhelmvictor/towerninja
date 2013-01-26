@@ -55,6 +55,7 @@ public class Game {
 
 		drawPlayerHands(players);
 		detectSlices(players);
+		removeStones();
 		moveStones();
 		drawStones();
 
@@ -101,7 +102,7 @@ public class Game {
 		for (int x = rowStart; x <= rowEnd; x++) {
 			for (int y = columnStart; y <= columnEnd; y++) {
 				if (tower.get(x)[y] != null && tower.get(x)[y].isOnTower()) {
-					removeStone(x, y);
+					destroyStone(x, y);
 				}
 			}
 		}
@@ -238,7 +239,7 @@ public class Game {
 									currentPlayer.getLastLeftX(),
 									currentPlayer.getLastLeftY())
 									&& !tower.get(i)[j].isOnTower()) {
-								removeStone(i, j);
+								destroyStone(i, j);
 								updateDestinations();
 							}
 						}
@@ -251,7 +252,7 @@ public class Game {
 									currentPlayer.getLastRightX(),
 									currentPlayer.getLastRightY())
 									&& !tower.get(i)[j].isOnTower()) {
-								removeStone(i, j);
+								destroyStone(i, j);
 								updateDestinations();
 							}
 						}
@@ -261,8 +262,33 @@ public class Game {
 		}
 	}
 
-	private void removeStone(int i, int j) {
+	/**
+	 * Sets sliced or exploded stones as destroyed.
+	 * 
+	 * @param i
+	 *            tower row
+	 * @param j
+	 *            tower column
+	 */
+	private void destroyStone(int i, int j) {
 		score.addScore(-1 * tower.get(i)[j].getPoints());
-		tower.get(i)[j] = null;
+		tower.get(i)[j].setDestroyed(true);
+		// tower.get(i)[j] = null;
+	}
+
+	/**
+	 * Loops through the tower and removes all stones with finished destroy
+	 * animation.
+	 */
+	private void removeStones() {
+		for (int i = 0; i < tower.size(); i++) {
+			for (int j = 0; j < tower.get(0).length; j++) {
+				if (tower.get(i)[j] != null && tower.get(i)[j].isDestroyed()) {
+					if (tower.get(i)[j].getDestroyTimer() == 0) {
+						tower.get(i)[j] = null;
+					}
+				}
+			}
+		}
 	}
 }
