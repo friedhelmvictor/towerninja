@@ -63,7 +63,7 @@ public class Main extends PApplet {
 	 * @see processing.core.PApplet#draw()
 	 */
 	public void draw() {
-		background(bg);
+		image(bg, 0, height - bg.height);
 		game.update(tracking.getPlayers());
 		displayScore();
 		if (DEV_MODE) {

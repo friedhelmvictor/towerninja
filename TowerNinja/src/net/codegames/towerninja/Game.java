@@ -4,9 +4,6 @@ import java.util.Vector;
 
 import processing.core.PApplet;
 
-// kennt alle steine
-// kennt Turm
-
 /**
  * @author chameleon
  * 
@@ -24,7 +21,7 @@ public class Game {
 	public Score score;
 
 	private static final int TOWER_HEIGHT = 8;
-	private static final int TOWER_WIDTH = 6;
+	private static final int TOWER_WIDTH = 5;
 	/**
 	 * A tower represented by a 2-dimensional data strucure. the first dimension
 	 * describes the towers width. The second its height. When a new stone is
@@ -149,7 +146,7 @@ public class Game {
 			for (int j = 0; j < tower.get(i).length; j++) {
 				if (tower.get(i)[j] == null) {
 					double rand = Math.random();
-					if (rand < 0.67d) {
+					if (rand < 0.65d) {
 						tower.get(i)[j] = new Brick(50, 5, i, j);
 					} else {
 						tower.get(i)[j] = new Bomb(50, 5, i, j);

@@ -11,8 +11,8 @@ abstract public class AbstractStone {
 	// Relative destination in the tower where the Stone is to be put.
 	private float iDestination, jDestination;
 	// Width and height of the stone
-	private float width = 70;
-	private float height = 40;
+	private float width = 72;
+	private float height = 48;
 	// variables for movement
 	private float yVelocity = 0.2f;
 	private float xVelocity = 0.1f;
@@ -44,16 +44,17 @@ abstract public class AbstractStone {
 	protected void setDestination(float iDestination, float jDestination) {
 		this.iDestination = iDestination;
 		this.jDestination = jDestination;
-		this.mPath = new Parabole(10, Main.height, 10 + (exactXDestination() - 10) / 2,
-				50, exactXDestination(), exactYDestination());
+		this.mPath = new Parabole(10, Main.height,
+				10 + (exactXDestination() - 10) / 2, 50, exactXDestination(),
+				exactYDestination());
 	}
 
 	protected void updatePathWithLastPosition(float iDestination,
 			float jDestination) {
 		this.iDestination = iDestination;
 		this.jDestination = jDestination;
-		this.mPath = new Parabole(10, Main.height, getxLocation(), getyLocation(),
-				exactXDestination(), exactYDestination());
+		this.mPath = new Parabole(10, Main.height, getxLocation(),
+				getyLocation(), exactXDestination(), exactYDestination());
 	}
 
 	protected float getjDestination() {
@@ -93,11 +94,13 @@ abstract public class AbstractStone {
 	}
 
 	protected float exactXDestination() {
-		return 200 + (getjDestination() * getWidth());
+		return (Main.width / 2) + 6 - (2.5f * (getWidth() + 12))
+				+ (getjDestination() * (getWidth() + 12));
 	}
 
 	protected float exactYDestination() {
-		return 600 - (getiDestination() * getHeight());
+		return Main.height - ((getiDestination() + 1) * (getHeight() + 12))
+				+ 12;
 	}
 
 	protected Parabole getPath() {
@@ -125,6 +128,20 @@ abstract public class AbstractStone {
 		return isOnTower;
 	}
 
+	/**
+	 * Checks if a line with given start and end point intersects with the
+	 * rectangle represented by the stone.
+	 * 
+	 * @param x1
+	 *            x-coordinate of starting point
+	 * @param y1
+	 *            y-coordinate of starting point
+	 * @param x2
+	 *            x-coordinate of ending point
+	 * @param y2
+	 *            y-coordinate of ending point
+	 * @return true if line intersects with stone
+	 */
 	public boolean contains(float x1, float y1, float x2, float y2) {
 		Rectangle2D rect = new Rectangle.Float(getxLocation(), getyLocation(),
 				getWidth(), getHeight());
