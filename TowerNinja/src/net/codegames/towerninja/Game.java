@@ -22,8 +22,8 @@ public class Game {
 	private long mLastTimeStamp = System.currentTimeMillis();
 	public Scoreboard scoreboard = new Scoreboard();
 	public Score score;
-	
-	private static final int TOWER_HIGHT = 8;
+
+	private static final int TOWER_HEIGHT = 8;
 	private static final int TOWER_WIDTH = 6;
 	/**
 	 * A tower represented by a 2-dimensional array. the first dimension
@@ -31,7 +31,7 @@ public class Game {
 	 * added to a certain location, it must not actually be located at that
 	 * position already. It will fly towards that position though.
 	 */
-	private Brick[][] mTower = new Brick[TOWER_HIGHT][TOWER_WIDTH];
+	private Brick[][] mTower = new Brick[TOWER_HEIGHT][TOWER_WIDTH];
 
 	/**
 	 * Game constructor
@@ -60,21 +60,72 @@ public class Game {
 	}
 
 	/**
-	 * Moves all stones for the passed number of frames
-	 * 
-	 * @param dT
+	 * Moves all stones for the passed number of frames.
 	 */
 	private void moveStones() {
 		for (int i = 0; i < mTower.length; i++) {
 			for (int j = 0; j < mTower[0].length; j++) {
 				if (mTower[i][j] != null) {
-					if (!mTower[i][j].isOnTower()){
+					if (!mTower[i][j].isOnTower()) {
 						mTower[i][j].moveToDestination(mApplet.frameRate);
-						if (mTower[i][j].isOnTower()){
+						if (mTower[i][j].isOnTower()) {
 							score.addScore(mTower[i][j].getPoints());
+
+							if (mTower[i][j] instanceof Bomb) {
+								handleExplosion(i, j);
+							}
 						}
 					}
-					
+
+				}
+			}
+		}
+	}
+
+	/**
+	 * Handles the explosion of a bomb for a given position in the tower and
+	 * triggers the removal of all stones.
+	 * 
+	 * @param i
+	 *            row in the tower
+	 * @param j
+	 *            column in the tower
+	 */
+	private void handleExplosion(int i, int j) {
+		int rowStart = (i - 1) < 0 ? 0 : (i - 1);
+		int rowEnd = (i + 1) >= TOWER_HEIGHT ? TOWER_HEIGHT - 1 : (i + 1);
+		int columnStart = (j - 1) < 0 ? 0 : (j - 1);
+		int columnEnd = (j + 1) >= TOWER_WIDTH ? TOWER_WIDTH - 1 : (j + 1);
+
+		for (int x = rowStart; x <= rowEnd; x++) {
+			for (int y = columnStart; y <= columnEnd; y++) {
+				if (mTower[x][y] != null && mTower[x][y].isOnTower()) {
+					removeStone(x, y);
+				}
+			}
+		}
+		updateDestinations();
+	}
+
+	/**
+	 * Checks for all flying stones if they need a new destination position, so
+	 * that stones don't land "floating in the air".
+	 */
+	private void updateDestinations() {
+		for (int i = 0; i < mTower.length; i++) {
+			for (int j = 0; j < mTower[0].length; j++) {
+				if (mTower[i][j] != null && !mTower[i][j].isOnTower()) {
+					int minRow = Integer.MAX_VALUE;
+					for (int k = i - 1; k >= 0; k--) {
+						if (mTower[k][j] == null) {
+							minRow = k;
+						}
+					}
+					if (minRow < Integer.MAX_VALUE) {
+						mTower[minRow][j] = mTower[i][j];
+						mTower[minRow][j].updatePathWithLastPosition(minRow, j);
+						mTower[i][j] = null;
+					}
 				}
 			}
 		}
@@ -88,6 +139,7 @@ public class Game {
 	 * @return a reference to the next {@link Brick}
 	 */
 	private Brick createStone() {
+		updateDestinations();
 		for (int i = 0; i < mTower.length; i++) {
 			for (int j = 0; j < mTower[0].length; j++) {
 				if (mTower[i][j] == null) {
@@ -98,7 +150,6 @@ public class Game {
 						mTower[i][j] = new Bomb(50, 5, i, j);
 					}
 					return mTower[i][j];
-					// break towerHeightLoop;
 				}
 			}
 		}
@@ -137,7 +188,7 @@ public class Game {
 			mApplet.stroke(color, 32);
 			// left hand
 			if (currentPlayer.getLeftSpeed() > MIN_SPEED) {
-				// draw 3 traces of different length over each other
+				// draw 6 traces of different length over each other
 				for (int i = 0; i < 6; i++) {
 					mApplet.beginShape();
 					for (int j = 0; j < currentPlayer.getLeft().size()
@@ -150,7 +201,7 @@ public class Game {
 			}
 			// right hand
 			if (currentPlayer.getRightSpeed() > MIN_SPEED) {
-				// draw 3 traces of different length over each other
+				// draw 6 traces of different length over each other
 				for (int i = 0; i < 6; i++) {
 					mApplet.beginShape();
 					for (int j = 0; j < currentPlayer.getRight().size()
@@ -183,9 +234,9 @@ public class Game {
 									currentPlayer.getLeftY(),
 									currentPlayer.getLastLeftX(),
 									currentPlayer.getLastLeftY())
-									&& !mTower[i][j].isOnTower()
-									) {
+									&& !mTower[i][j].isOnTower()) {
 								removeStone(i, j);
+								updateDestinations();
 							}
 						}
 						// right hand detection
@@ -196,9 +247,9 @@ public class Game {
 									currentPlayer.getRightY(),
 									currentPlayer.getLastRightX(),
 									currentPlayer.getLastRightY())
-									&& !mTower[i][j].isOnTower()
-									) {
+									&& !mTower[i][j].isOnTower()) {
 								removeStone(i, j);
+								updateDestinations();
 							}
 						}
 					}
@@ -210,8 +261,5 @@ public class Game {
 	private void removeStone(int i, int j) {
 		score.addScore(-1 * mTower[i][j].getPoints());
 		mTower[i][j] = null;
-		if (mTower[i + 1][j] != null) {
-			mTower[i][j + 1].setjDestination(j);
-		}
 	}
 }

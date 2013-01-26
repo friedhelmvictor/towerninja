@@ -18,9 +18,9 @@ abstract public class AbstractStone {
 	private float xVelocity = 0.1f;
 	private Parabole mPath;
 	private boolean isOnTower = false;
-	//points a stone gives when hit tower or loose when sliced
+	// points a stone gives when hit tower or loose when sliced
 	private int points = 0;
-	
+
 	protected float getxLocation() {
 		return xLocation;
 	}
@@ -41,16 +41,23 @@ abstract public class AbstractStone {
 		return iDestination;
 	}
 
-	protected void setiDestination(float iDestination) {
+	protected void setDestination(float iDestination, float jDestination) {
 		this.iDestination = iDestination;
+		this.jDestination = jDestination;
+		this.mPath = new Parabole(10, 400, 10 + (exactXDestination() - 10) / 2,
+				50, exactXDestination(), exactYDestination());
+	}
+
+	protected void updatePathWithLastPosition(float iDestination,
+			float jDestination) {
+		this.iDestination = iDestination;
+		this.jDestination = jDestination;
+		this.mPath = new Parabole(10, 400, getxLocation(), getyLocation(),
+				exactXDestination(), exactYDestination());
 	}
 
 	protected float getjDestination() {
 		return jDestination;
-	}
-
-	protected void setjDestination(float jDestination) {
-		this.jDestination = jDestination;
 	}
 
 	protected float getWidth() {
@@ -97,26 +104,15 @@ abstract public class AbstractStone {
 		return mPath;
 	}
 
-	protected void setTrajectoryTipY(float y) {
-		this.mPath = new Parabole(10, 400, 10 + (exactXDestination() - 10) / 2,
-				y, exactXDestination(), exactYDestination());
-		setxLocation(10);
-		setyLocation(400);
-	}
-
 	public void moveToDestination(float dT) {
 		if (isOnTower())
 			;
-		// else if (Math.abs(getxLocation() - exactXDestination()) < 5
-		// && Math.abs(getyLocation() - exactYDestination()) < 5)
-		// ;
 		else if (getxLocation() + dT * getxVelocity() > exactXDestination()) {
 			setxLocation(exactXDestination());
 			setyLocation(exactYDestination());
 			setIsOnTower();
 		} else {
 			setxLocation(getxLocation() + dT * getxVelocity());
-			// setyLocation(getyLocation() + dT * getyVelocity());
 			setyLocation(getPath().getY(getxLocation()));
 		}
 	}
@@ -130,10 +126,9 @@ abstract public class AbstractStone {
 	}
 
 	public boolean contains(float x1, float y1, float x2, float y2) {
-		Rectangle2D rect = new Rectangle.Float(getxLocation(), getyLocation(), getWidth(), getHeight());
+		Rectangle2D rect = new Rectangle.Float(getxLocation(), getyLocation(),
+				getWidth(), getHeight());
 		return rect.intersectsLine(new Line2D.Float(x1, y1, x2, y2));
-//		return (x <= getxLocation() + getWidth() && x >= getxLocation()
-//				&& y <= getyLocation() + getHeight() && y >= getyLocation());
 	}
 
 	abstract void draw(RendererInterface renderer);
