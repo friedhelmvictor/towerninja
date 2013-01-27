@@ -10,7 +10,7 @@ public class Main extends PApplet {
 	 * Set the value of KINECT_PRESENT to true if you actually have one
 	 * connected. Otherwise you won't be able to start the program.
 	 */
-	public static final boolean KINECT_PRESENT = true;
+	public static final boolean KINECT_PRESENT = false;
 
 	/**
 	 * When enabled, displays a frame counter
@@ -65,7 +65,7 @@ public class Main extends PApplet {
 	public void draw() {
 		image(bg, 0, height - bg.height);
 		game.update(tracking.getPlayers());
-		
+		displayScore();
 		if (DEV_MODE) {
 			displayDevOutput();
 		}
@@ -80,7 +80,28 @@ public class Main extends PApplet {
 		text("Memory: " + Math.round((rt.totalMemory() - rt.freeMemory())/(1024*1024)) + " MB", 10, 35);
 	}
 
-	
+	/**
+	 * Displays the Score in game
+	 * 
+	 */
+	private void displayScore() {
+		fill(0, 102, 153, 204);
+		text("Score: " + game.score.getScore(), 10, 60);
+	}
+
+	/**
+	 * Draw the Scoreboard
+	 * 
+	 */
+	private void drawScoreboard() {
+		Score[] scoreboardArray = game.scoreboard.giveScoreboard();
+		text("Highscore" , 10, 50);
+		for(int i = 0; i < scoreboardArray.length && i <= 10; i++){
+			text(i , 10, 80 + i*30);
+			text(scoreboardArray[i].getName(), 100, 80 + i*30);
+			text(scoreboardArray[i].getScore(), 300, 80 + i*30);
+		}
+	}
 	
 	/**
 	 * Callback for SimpleOpenNI's automatic user calibration.

@@ -1,14 +1,12 @@
 package net.codegames.towerninja;
 
-import java.io.Serializable;
-
-public class Score implements Comparable<Score>, Serializable{
+public class Score implements Comparable<Score>, java.io.Serializable {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 301735992505840227L;
 	private int score = 0;
-	private String name = "Ninja";
+	private String name = "Peter";
 	public int addScore(int n)
 	{
 		this.score += n;  

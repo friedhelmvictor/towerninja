@@ -4,9 +4,6 @@ import java.util.Vector;
 
 import processing.core.PApplet;
 
-// kennt alle steine
-// kennt Turm
-
 /**
  * @author chameleon
  * 
@@ -15,25 +12,23 @@ import processing.core.PApplet;
  */
 public class Game {
 
-	private final long NEW_STONE_DELAY = 1000L;
+	private final long NEW_STONE_DELAY = 500L;
 	private final float MIN_SPEED = 20;
 	private PApplet mApplet;
 	private AppletRenderer mRenderer;
 	private long mLastTimeStamp = System.currentTimeMillis();
-	private static boolean startScreen = true;
-
 	public Scoreboard scoreboard = new Scoreboard();
 	public Score score;
-	
-	private static final int TOWER_HIGHT = 8;
-	private static final int TOWER_WIDTH = 6;
+
+	private static final int TOWER_HEIGHT = 8;
+	private static final int TOWER_WIDTH = 5;
 	/**
-	 * A tower represented by a 2-dimensional array. the first dimension
+	 * A tower represented by a 2-dimensional data strucure. the first dimension
 	 * describes the towers width. The second its height. When a new stone is
 	 * added to a certain location, it must not actually be located at that
 	 * position already. It will fly towards that position though.
 	 */
-	private Brick[][] mTower = new Brick[TOWER_HIGHT][TOWER_WIDTH];
+	private Vector<Brick[]> tower = new Vector<Brick[]>();
 
 	/**
 	 * Game constructor
@@ -44,61 +39,96 @@ public class Game {
 	public Game(PApplet applet) {
 		this.mApplet = applet;
 		this.mRenderer = new AppletRenderer(mApplet);
-		scoreboard.load("scores.txt");
 		score = new Score();
 
-		scoreboard.addScore(score);
-
+		for (int i = 0; i < TOWER_HEIGHT; i++) {
+			tower.add(new Brick[TOWER_WIDTH]);
+		}
 	}
 
 	public void update(Vector<Player> players) {
-			if(!lost()){
-				if (!startScreen && System.currentTimeMillis() - mLastTimeStamp > NEW_STONE_DELAY) {
-					mLastTimeStamp = System.currentTimeMillis();
-					createStone();
-				}
-				
-				drawPlayerHands(players);
-				detectSlices(players);
-				if(!startScreen){
-					moveStones();
-				}
-				else{
-					drawStartScreen();
-				}
-				drawStones();
-				displayScore();
-			}
-			else{
-				drawScoreboard();
-				scoreboard.save("scores.txt");
-			}
-		
-		
-		
+
+		if (System.currentTimeMillis() - mLastTimeStamp > NEW_STONE_DELAY) {
+			mLastTimeStamp = System.currentTimeMillis();
+			createStone();
+		}
+
+		drawPlayerHands(players);
+		detectSlices(players);
+		removeStones();
+		moveStones();
+		drawStones();
+
 	}
 
 	/**
-	 * Moves all stones for the passed number of frames
-	 * 
-	 * @param dT
+	 * Moves all stones for the passed number of frames.
 	 */
 	private void moveStones() {
-		for (int i = 0; i < mTower.length; i++) {
-			for (int j = 0; j < mTower[0].length; j++) {
-				if (mTower[i][j] != null) {
-					if (!mTower[i][j].isOnTower()){
-						mTower[i][j].moveToDestination(mApplet.frameRate);
-						if (mTower[i][j].isOnTower()){
-							score.addScore(mTower[i][j].getPoints());
-						
-							if(mTower[i][j].getClass().getName() == "net.codegames.towerninja.Bomb"){
-								System.out.println("Bomb "+ i + ";" +j);
-								explode(i,j);
+		for (int i = 0; i < tower.size(); i++) {
+			for (int j = 0; j < tower.get(i).length; j++) {
+				if (tower.get(i)[j] != null) {
+					if (!tower.get(i)[j].isOnTower()) {
+						tower.get(i)[j].moveToDestination(mApplet.frameRate);
+						if (tower.get(i)[j].isOnTower()) {
+							score.addScore(tower.get(i)[j].getPoints());
+
+							if (tower.get(i)[j] instanceof Bomb) {
+								handleExplosion(i, j);
 							}
 						}
 					}
-					
+
+				}
+			}
+		}
+	}
+
+	/**
+	 * Handles the explosion of a bomb for a given position in the tower and
+	 * triggers the removal of all stones.
+	 * 
+	 * @param i
+	 *            row in the tower
+	 * @param j
+	 *            column in the tower
+	 */
+	private void handleExplosion(int i, int j) {
+		int rowStart = (i - 1) < 0 ? 0 : (i - 1);
+		int rowEnd = (i + 1) >= TOWER_HEIGHT ? TOWER_HEIGHT - 1 : (i + 1);
+		int columnStart = (j - 1) < 0 ? 0 : (j - 1);
+		int columnEnd = (j + 1) >= TOWER_WIDTH ? TOWER_WIDTH - 1 : (j + 1);
+
+		for (int x = rowStart; x <= rowEnd; x++) {
+			for (int y = columnStart; y <= columnEnd; y++) {
+				if (tower.get(x)[y] != null && tower.get(x)[y].isOnTower()) {
+					destroyStone(x, y);
+				}
+			}
+		}
+		updateDestinations();
+	}
+
+	/**
+	 * Checks for all flying stones if they need a new destination position, so
+	 * that stones don't land "floating in the air".
+	 */
+	private void updateDestinations() {
+		for (int i = 0; i < tower.size(); i++) {
+			for (int j = 0; j < tower.get(i).length; j++) {
+				if (tower.get(i)[j] != null && !tower.get(i)[j].isOnTower()) {
+					int minRow = Integer.MAX_VALUE;
+					for (int k = i - 1; k >= 0; k--) {
+						if (tower.get(k)[j] == null) {
+							minRow = k;
+						}
+					}
+					if (minRow < Integer.MAX_VALUE) {
+						tower.get(minRow)[j] = tower.get(i)[j];
+						tower.get(minRow)[j].updatePathWithLastPosition(minRow,
+								j);
+						tower.get(i)[j] = null;
+					}
 				}
 			}
 		}
@@ -112,17 +142,17 @@ public class Game {
 	 * @return a reference to the next {@link Brick}
 	 */
 	private Brick createStone() {
-		for (int i = 0; i < mTower.length; i++) {
-			for (int j = 0; j < mTower[0].length; j++) {
-				if (mTower[i][j] == null) {
+		updateDestinations();
+		for (int i = 0; i < tower.size(); i++) {
+			for (int j = 0; j < tower.get(i).length; j++) {
+				if (tower.get(i)[j] == null) {
 					double rand = Math.random();
-					if (rand < 0.75d) {
-						mTower[i][j] = new Brick(50, 5, i, j);
+					if (rand < 0.65d) {
+						tower.get(i)[j] = new Brick(50, 5, i, j);
 					} else {
-						mTower[i][j] = new Bomb(50, 5, i, j);
+						tower.get(i)[j] = new Bomb(50, 5, i, j);
 					}
-					return mTower[i][j];
-					// break towerHeightLoop;
+					return tower.get(i)[j];
 				}
 			}
 		}
@@ -134,10 +164,10 @@ public class Game {
 	 */
 	private void drawStones() {
 		mApplet.fill(64);
-		for (int i = 0; i < mTower.length; i++) {
-			for (int j = 0; j < mTower[0].length; j++) {
-				if (mTower[i][j] != null) {
-					mTower[i][j].draw(mRenderer);
+		for (int i = 0; i < tower.size(); i++) {
+			for (int j = 0; j < tower.get(0).length; j++) {
+				if (tower.get(i)[j] != null) {
+					tower.get(i)[j].draw(mRenderer);
 				}
 			}
 		}
@@ -161,7 +191,7 @@ public class Game {
 			mApplet.stroke(color, 32);
 			// left hand
 			if (currentPlayer.getLeftSpeed() > MIN_SPEED) {
-				// draw 3 traces of different length over each other
+				// draw 6 traces of different length over each other
 				for (int i = 0; i < 6; i++) {
 					mApplet.beginShape();
 					for (int j = 0; j < currentPlayer.getLeft().size()
@@ -174,7 +204,7 @@ public class Game {
 			}
 			// right hand
 			if (currentPlayer.getRightSpeed() > MIN_SPEED) {
-				// draw 3 traces of different length over each other
+				// draw 6 traces of different length over each other
 				for (int i = 0; i < 6; i++) {
 					mApplet.beginShape();
 					for (int j = 0; j < currentPlayer.getRight().size()
@@ -195,34 +225,35 @@ public class Game {
 	 *            vector of all {@link Player}s
 	 */
 	private void detectSlices(Vector<Player> players) {
-		for (int i = 0; i < mTower.length; i++) {
-			for (int j = 0; j < mTower[0].length; j++) {
-				if (mTower[i][j] != null) {
+		for (int i = 0; i < tower.size(); i++) {
+			for (int j = 0; j < tower.get(0).length; j++) {
+				if (tower.get(i)[j] != null) {
 					for (int p = 0; p < players.size(); p++) {
 						Player currentPlayer = players.get(p);
 						// left hand detection
 						if (currentPlayer.getLeftSpeed() > MIN_SPEED
-								&& mTower[i][j] != null) {
-							if (mTower[i][j].contains(currentPlayer.getLeftX(),
+								&& tower.get(i)[j] != null) {
+							if (tower.get(i)[j].contains(
+									currentPlayer.getLeftX(),
 									currentPlayer.getLeftY(),
 									currentPlayer.getLastLeftX(),
 									currentPlayer.getLastLeftY())
-									&& !mTower[i][j].isOnTower()
-									) {
-								removeStone(i, j);
+									&& !tower.get(i)[j].isOnTower()) {
+								destroyStone(i, j);
+								updateDestinations();
 							}
 						}
 						// right hand detection
 						if (currentPlayer.getRightSpeed() > MIN_SPEED
-								&& mTower[i][j] != null) {
-							if (mTower[i][j].contains(
+								&& tower.get(i)[j] != null) {
+							if (tower.get(i)[j].contains(
 									currentPlayer.getRightX(),
 									currentPlayer.getRightY(),
 									currentPlayer.getLastRightX(),
 									currentPlayer.getLastRightY())
-									&& !mTower[i][j].isOnTower()
-									) {
-								removeStone(i, j);
+									&& !tower.get(i)[j].isOnTower()) {
+								destroyStone(i, j);
+								updateDestinations();
 							}
 						}
 					}
@@ -231,83 +262,33 @@ public class Game {
 		}
 	}
 
-	private void removeStone(int i, int j) {
-		score.addScore(-1 * mTower[i][j].getPoints());
-		mTower[i][j] = null;
-		if(startScreen){
-			startScreen = false;
-		}
-		if (mTower[i + 1][j] != null) {
-			mTower[i + 1 ][j].moveToDestination(j);
-		}
-	}
-	
 	/**
-	 * Displays the Score in game
+	 * Sets sliced or exploded stones as destroyed.
 	 * 
+	 * @param i
+	 *            tower row
+	 * @param j
+	 *            tower column
 	 */
-	private void displayScore() {
-		mApplet.text("Score: " + this.score.getScore(), 10, 60);
+	private void destroyStone(int i, int j) {
+		score.addScore(-1 * tower.get(i)[j].getPoints());
+		tower.get(i)[j].setDestroyed(true);
+		// tower.get(i)[j] = null;
 	}
 
 	/**
-	 * Draw the Scoreboard
-	 * 
+	 * Loops through the tower and removes all stones with finished destroy
+	 * animation.
 	 */
-	private void drawScoreboard() {
-		Score[] scoreboardArray = this.scoreboard.giveScoreboard();
-		mApplet.text("Highscore" , 10, 50);
-		for(int i = 0; i < scoreboardArray.length && i <= 10; i++){
-			mApplet.text(i+1 , 10, 80 + i*30);
-			mApplet.text(scoreboardArray[i].getName(), 100, 80 + i*30);
-			mApplet.text(scoreboardArray[i].getScore(), 300, 80 + i*30);
-		}
-	}
-	
-	/**
-	 * Draw the start screen.
-	 */
-	private void drawStartScreen(){
-		mTower[0][0] = new Bat(400,500,400,500);
-		mApplet.text("Slice the stone to start the game!", 390, 500);
-	}
-	
-	
-	/**
-	 * Does actually the opposite than what we intended to do, but for testing that we can loose.
-	 * 
-	 * @return true when tower is full, false else
-	 */
-	private boolean lost(){
-		for (int rowIndex = 0; rowIndex < mTower.length; rowIndex++ ) {
-		       Object[] row = mTower[rowIndex];
-		       if (row != null) {
-		          for (int columnIndex = 0; columnIndex < row.length; columnIndex++) {
-		             if (null == row[columnIndex]) {
-		                 return false;
-		             }
-		          }
-		       }
-		       else
-		    	   return false;
-		    }
-		return true;
-	}
-	
-	private void explode(int i, int j){
-		System.out.println("Bomb "+ i + ";" +j);
-		for(int x = i-1; x <= i+1 && x <= TOWER_WIDTH; x++){
-			if(!(x<0)){
-				for(int y = j-1; y <= j+1 && y <= TOWER_HIGHT; y++){
-					if(!(y<0)){
-						if(mTower[x][y] != null && mTower[x][y].isOnTower()){
-							removeStone(x,y);
-							System.out.println("Remove "+ x + ";" +y);
-						}
+	private void removeStones() {
+		for (int i = 0; i < tower.size(); i++) {
+			for (int j = 0; j < tower.get(0).length; j++) {
+				if (tower.get(i)[j] != null && tower.get(i)[j].isDestroyed()) {
+					if (tower.get(i)[j].getDestroyTimer() == 0) {
+						tower.get(i)[j] = null;
 					}
 				}
 			}
 		}
-		
 	}
 }

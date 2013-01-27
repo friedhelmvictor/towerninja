@@ -1,13 +1,8 @@
 package net.codegames.towerninja;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInput;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.*;
@@ -44,49 +39,52 @@ public class Scoreboard extends PApplet implements java.io.Serializable {
 	public Score[] giveScoreboard(){
 		return scores.toArray(new Score[scores.size()]);
 	}
-
+	
 	public void save(String filename)
 	{
 		
-		//Delete if tempFile exists
-		File fileTemp = new File("../resources/" + filename);
-		if (fileTemp.exists()){
-		    fileTemp.delete();
-		}
 		try
 		{
-			final ObjectOutputStream fos = new ObjectOutputStream(new FileOutputStream("../resources/" + filename, true));
-			fos.writeObject(scores);
-		    fos.close();
+			
+			
+		// Write to disk with FileOutputStream
+		FileOutputStream f_out = new FileOutputStream(filename);
+
+		// Write object with ObjectOutputStream
+		ObjectOutputStream obj_out = new ObjectOutputStream (f_out);
+
+		// Write object out to disk
+		obj_out.writeObject ( this );
 		}
 		catch(Exception e)
 		{}		
 	}
 	
-	public List<Score> load(String filename)
+	public Scoreboard load(String file)
 	{
-		 try{
-		      //use buffering
-		      InputStream file = new FileInputStream( "../resources/" +  filename);
-		      InputStream buffer = new BufferedInputStream( file );
-		      ObjectInput input = new ObjectInputStream ( buffer );
-		      try{
-		        //deserialize the List
-		        List<Score> scores_new = (List<Score>)input.readObject();
-		        scores = scores_new;
-		        return scores_new;
-		      }
-		      finally{
-		        input.close();
-		      }
-		    }
-		    catch(ClassNotFoundException ex){
-		      
-		    }
-		    catch(IOException ex){
-		     
-		    }	
-		 return null;
+		try
+		{
+			// Read from disk using FileInputStream
+			FileInputStream f_in = new FileInputStream(file);
+
+			// Read object using ObjectInputStream
+			ObjectInputStream obj_in = 
+				new ObjectInputStream (f_in);
+
+			// Read an object
+			Object obj = obj_in.readObject();
+
+			if (obj instanceof Scoreboard)
+			{
+				
+				Scoreboard scoreboard_new = (Scoreboard) obj;
+				return scoreboard_new;
+			}
+		}
+		catch(Exception e){
+			System.out.println(e);
+		}
+		return null;
 	}
 	
 	
