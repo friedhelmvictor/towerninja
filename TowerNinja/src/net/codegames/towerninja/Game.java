@@ -91,6 +91,11 @@ public class Game {
 						mTower[i][j].moveToDestination(mApplet.frameRate);
 						if (mTower[i][j].isOnTower()){
 							score.addScore(mTower[i][j].getPoints());
+						
+							if(mTower[i][j].getClass().getName() == "net.codegames.towerninja.Bomb"){
+								System.out.println("Bomb "+ i + ";" +j);
+								explode(i,j);
+							}
 						}
 					}
 					
@@ -233,7 +238,7 @@ public class Game {
 			startScreen = false;
 		}
 		if (mTower[i + 1][j] != null) {
-			mTower[i][j + 1].moveToDestination(j);
+			mTower[i + 1 ][j].moveToDestination(j);
 		}
 	}
 	
@@ -287,5 +292,22 @@ public class Game {
 		    	   return false;
 		    }
 		return true;
+	}
+	
+	private void explode(int i, int j){
+		System.out.println("Bomb "+ i + ";" +j);
+		for(int x = i-1; x <= i+1 && x <= TOWER_WIDTH; x++){
+			if(!(x<0)){
+				for(int y = j-1; y <= j+1 && y <= TOWER_HIGHT; y++){
+					if(!(y<0)){
+						if(mTower[x][y] != null && mTower[x][y].isOnTower()){
+							removeStone(x,y);
+							System.out.println("Remove "+ x + ";" +y);
+						}
+					}
+				}
+			}
+		}
+		
 	}
 }
