@@ -3,6 +3,7 @@ package net.codegames.towerninja;
 import java.util.Vector;
 
 import processing.core.PApplet;
+import processing.core.PImage;
 
 /**
  * @author chameleon
@@ -333,6 +334,9 @@ public class Game {
 	 */
 	private void drawStartScreen(){
 		tower.get(0)[0] = new Bat(400,500,400,500);
-		mApplet.text("Slice the stone to start the game!", 390, 500);
+		PImage bubble = mApplet.loadImage(mApplet.getCodeBase()
+				+ "../resources/bubble.png");
+		mApplet.image(bubble, 420, 500-bubble.height );
+		mApplet.text("Slice the Bat to start the game!", 500, 480-bubble.height/2);
 	}
 }
