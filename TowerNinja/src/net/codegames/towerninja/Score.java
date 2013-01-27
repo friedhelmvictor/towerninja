@@ -6,7 +6,7 @@ public class Score implements Comparable<Score>, java.io.Serializable {
 	 */
 	private static final long serialVersionUID = 301735992505840227L;
 	private int score = 0;
-	private String name = "Peter";
+	private String name = "Ninja";
 	public int addScore(int n)
 	{
 		this.score += n;  

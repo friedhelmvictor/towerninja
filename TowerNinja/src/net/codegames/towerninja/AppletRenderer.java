@@ -6,11 +6,13 @@ import processing.core.PImage;
 public class AppletRenderer implements RendererInterface {
 	
 	private PApplet mApplet;
-	private PImage mBombImage, mBrickImage, mBrickSlice, mBrickFade;
+	private PImage mBatImage, mBombImage, mBrickImage, mBrickSlice, mBrickFade;
 
 	public AppletRenderer(PApplet mApplet) {
 		super();
 		this.mApplet = mApplet;
+		mBatImage = mApplet.loadImage(mApplet.getCodeBase()
+				+ "../resources/brick.png");
 		mBombImage = mApplet.loadImage(mApplet.getCodeBase()
 				+ "../resources/bomb.png");
 		mBrickImage = mApplet.loadImage(mApplet.getCodeBase()
@@ -52,5 +54,19 @@ public class AppletRenderer implements RendererInterface {
 			bomb.decreaseDestroyTime();
 		}
 	}
-
+	
+	public void drawBat(Bat bat) {
+		if (!bat.isDestroyed()) {
+			mApplet.image(mBatImage, bat.getxLocation(), bat.getyLocation());
+		} else {
+			if (bat.getDestroyTimer() > 8) {
+				mApplet.image(mBatImage, bat.getxLocation(), bat.getyLocation());
+			} else {
+				mApplet.tint(255, 30 * bat.getDestroyTimer());
+				mApplet.image(mBatImage, bat.getxLocation(), bat.getyLocation());
+				mApplet.noTint();
+			}
+			bat.decreaseDestroyTime();
+		}
+	}
 }
