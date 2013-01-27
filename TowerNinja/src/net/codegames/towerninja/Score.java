@@ -1,6 +1,8 @@
 package net.codegames.towerninja;
 
-public class Score implements Comparable<Score>, java.io.Serializable {
+import java.io.Serializable;
+
+public class Score implements Comparable<Score>, Serializable{
 	/**
 	 * 
 	 */

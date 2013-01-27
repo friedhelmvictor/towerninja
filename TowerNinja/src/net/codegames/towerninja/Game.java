@@ -21,8 +21,7 @@ public class Game {
 	private AppletRenderer mRenderer;
 	private long mLastTimeStamp = System.currentTimeMillis();
 	private static boolean startScreen = true;
-	
-	
+
 	public Scoreboard scoreboard = new Scoreboard();
 	public Score score;
 	
@@ -45,32 +44,37 @@ public class Game {
 	public Game(PApplet applet) {
 		this.mApplet = applet;
 		this.mRenderer = new AppletRenderer(mApplet);
+		scoreboard.load("scores.txt");
 		score = new Score();
+
 		scoreboard.addScore(score);
+
 	}
 
 	public void update(Vector<Player> players) {
-
-		if(!lost()){
-			if (!startScreen && System.currentTimeMillis() - mLastTimeStamp > NEW_STONE_DELAY) {
-				mLastTimeStamp = System.currentTimeMillis();
-				createStone();
-			}
-			
-			drawPlayerHands(players);
-			detectSlices(players);
-			if(!startScreen){
-				moveStones();
+			if(!lost()){
+				if (!startScreen && System.currentTimeMillis() - mLastTimeStamp > NEW_STONE_DELAY) {
+					mLastTimeStamp = System.currentTimeMillis();
+					createStone();
+				}
+				
+				drawPlayerHands(players);
+				detectSlices(players);
+				if(!startScreen){
+					moveStones();
+				}
+				else{
+					drawStartScreen();
+				}
+				drawStones();
+				displayScore();
 			}
 			else{
-				drawStartScreen();
+				drawScoreboard();
+				scoreboard.save("scores.txt");
 			}
-			drawStones();
-			displayScore();
-		}
-		else{
-			drawScoreboard();
-		}
+		
+		
 		
 	}
 
