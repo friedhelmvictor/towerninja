@@ -19,7 +19,8 @@ public class Game {
 	private long mLastTimeStamp = System.currentTimeMillis();
 	public Scoreboard scoreboard = new Scoreboard();
 	public Score score;
-
+	private static boolean startScreen = true;
+	
 	private static final int TOWER_HEIGHT = 8;
 	private static final int TOWER_WIDTH = 5;
 	/**
@@ -39,26 +40,37 @@ public class Game {
 	public Game(PApplet applet) {
 		this.mApplet = applet;
 		this.mRenderer = new AppletRenderer(mApplet);
+		scoreboard.load("scores.txt");
 		score = new Score();
-
+		scoreboard.addScore(score);
 		for (int i = 0; i < TOWER_HEIGHT; i++) {
 			tower.add(new Brick[TOWER_WIDTH]);
 		}
 	}
 
 	public void update(Vector<Player> players) {
-
-		if (System.currentTimeMillis() - mLastTimeStamp > NEW_STONE_DELAY) {
-			mLastTimeStamp = System.currentTimeMillis();
-			createStone();
+		
+		if(startScreen)
+		{
+			drawStartScreen();
+			drawPlayerHands(players);
+			detectSlices(players);
+			removeStones();
+			drawStones();
 		}
-
-		drawPlayerHands(players);
-		detectSlices(players);
-		removeStones();
-		moveStones();
-		drawStones();
-
+		else
+		{
+			if (System.currentTimeMillis() - mLastTimeStamp > NEW_STONE_DELAY) {
+				mLastTimeStamp = System.currentTimeMillis();
+				createStone();
+			}
+			drawPlayerHands(players);
+			detectSlices(players);
+			removeStones();
+			moveStones();
+			drawStones();
+			displayScore();
+		}
 	}
 
 	/**
@@ -273,6 +285,7 @@ public class Game {
 	private void destroyStone(int i, int j) {
 		score.addScore(-1 * tower.get(i)[j].getPoints());
 		tower.get(i)[j].setDestroyed(true);
+		startScreen = false;
 		// tower.get(i)[j] = null;
 	}
 
@@ -290,5 +303,36 @@ public class Game {
 				}
 			}
 		}
+	}
+	
+
+	/**
+	 * Displays the Score in game
+	 * 
+	 */
+	private void displayScore() {
+		mApplet.text("Score: " + this.score.getScore(), 10, 60);
+	}
+
+	/**
+	 * Draw the Scoreboard
+	 * 
+	 */
+	private void drawScoreboard() {
+		Score[] scoreboardArray = this.scoreboard.giveScoreboard();
+		mApplet.text("Highscore" , 10, 50);
+		for(int i = 0; i < scoreboardArray.length && i <= 10; i++){
+			mApplet.text(i+1 , 10, 80 + i*30);
+			mApplet.text(scoreboardArray[i].getName(), 100, 80 + i*30);
+			mApplet.text(scoreboardArray[i].getScore(), 300, 80 + i*30);
+		}
+	}
+	
+	/**
+	 * Draw the start screen.
+	 */
+	private void drawStartScreen(){
+		tower.get(0)[0] = new Bat(400,500,400,500);
+		mApplet.text("Slice the stone to start the game!", 390, 500);
 	}
 }
