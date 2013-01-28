@@ -28,9 +28,11 @@ public class AppletRenderer implements RendererInterface {
 		if (!brick.isDestroyed()) {
 			mApplet.image(mBrickImage, brick.getxLocation(), brick.getyLocation());
 		} else {
+			drawPoints(brick);
 			if (brick.getDestroyTimer() > 8) {
 				mApplet.image(mBrickSlice, brick.getxLocation(), brick.getyLocation());
 			} else {
+				
 				mApplet.tint(255, 30 * brick.getDestroyTimer());
 				mApplet.image(mBrickFade, brick.getxLocation(), brick.getyLocation());
 				mApplet.noTint();
@@ -44,6 +46,7 @@ public class AppletRenderer implements RendererInterface {
 		if (!bomb.isDestroyed()) {
 			mApplet.image(mBombImage, bomb.getxLocation(), bomb.getyLocation());
 		} else {
+			drawPoints(bomb);
 			if (bomb.getDestroyTimer() > 8) {
 				mApplet.image(mBombImage, bomb.getxLocation(), bomb.getyLocation());
 			} else {
@@ -62,12 +65,18 @@ public class AppletRenderer implements RendererInterface {
 			if (bat.getDestroyTimer() > 8) {
 				mApplet.image(mBatImage, bat.getxLocation(), bat.getyLocation());
 			} else {
+				
 				mApplet.tint(255, 30 * bat.getDestroyTimer());
 				mApplet.image(mBatImage, bat.getxLocation(), bat.getyLocation());
 				mApplet.noTint();
 			}
 			bat.decreaseDestroyTime();
 		}
+	}
+	
+	private void drawPoints(AbstractStone stone){
+		mApplet.text(-1*stone.getPoints(), stone.getxLocation(), stone.getyLocation());
+
 	}
 
 }

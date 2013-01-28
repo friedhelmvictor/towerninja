@@ -21,6 +21,7 @@ public class Game {
 	public Scoreboard scoreboard = new Scoreboard();
 	public Score score;
 	private static boolean startScreen = true;
+	private boolean lost = false;
 	
 	private static final int TOWER_HEIGHT = 8;
 	private static final int TOWER_WIDTH = 5;
@@ -312,6 +313,7 @@ public class Game {
 	 * 
 	 */
 	private void displayScore() {
+		mApplet.textSize(32);
 		mApplet.text("Score: " + this.score.getScore(), 10, 60);
 	}
 
@@ -335,8 +337,8 @@ public class Game {
 	private void drawStartScreen(){
 		tower.get(0)[0] = new Bat(400,500,400,500);
 		PImage bubble = mApplet.loadImage(mApplet.getCodeBase()
-				+ "../resources/bubble.png");
+				+ "../resources/speech-bubble-small.png");
 		mApplet.image(bubble, 420, 500-bubble.height );
-		mApplet.text("Slice the Bat to start the game!", 500, 480-bubble.height/2);
+		//mApplet.text("Slice the Bat to start the game!", 500, 480-bubble.height/2);
 	}
 }
