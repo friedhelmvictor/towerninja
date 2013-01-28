@@ -15,7 +15,7 @@ public class Main extends PApplet {
 	/**
 	 * When enabled, displays a frame counter
 	 */
-	private static final boolean DEV_MODE = true;
+	private static final boolean DEV_MODE = false;
 	
 	/**
 	 * 

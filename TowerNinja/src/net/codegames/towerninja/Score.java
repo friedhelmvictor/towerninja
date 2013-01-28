@@ -12,11 +12,14 @@ public class Score implements Comparable<Score>, Serializable{
 	public int addScore(int n)
 	{
 		this.score += n;  
+		if(this.score < 0)
+			this.score = 0;
 		return this.score;
 	}
 	
 	public int score()
 	{
+		
 		return this.score;
 	}
 
@@ -26,6 +29,8 @@ public class Score implements Comparable<Score>, Serializable{
 
 	public void setScore(int score) {
 		this.score = score;
+		if(this.score < 0)
+			this.score = 0;
 	}
 
 	public String getName() {
@@ -44,4 +49,5 @@ public class Score implements Comparable<Score>, Serializable{
         else
             return -1;
 	}
+
 }
