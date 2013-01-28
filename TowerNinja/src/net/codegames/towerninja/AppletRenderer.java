@@ -37,6 +37,10 @@ public class AppletRenderer implements RendererInterface {
 			}
 			brick.decreaseDestroyTime();
 		}
+//		for(int i=(int)brick.getxLocation(); i<= brick.exactXDestination(); i+=4) {
+//			mApplet.stroke(23);
+//			mApplet.point(i, brick.getPath().getY(i));
+//		}
 	}
 
 	@Override

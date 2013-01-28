@@ -32,7 +32,7 @@ public class Parabole {
 
 		bFactor = (d4 - aFactor * a4) / b4;
 		c = d1 - (aFactor * a1 + bFactor * b1);
-		System.out.println(aFactor + "x²+" + bFactor + "x+" + c);
+//		System.out.println(aFactor + "xï¿½+" + bFactor + "x+" + c);
 
 //		float a1 = x1 * x1;
 //		float a2 = x2 * x2;
@@ -41,7 +41,7 @@ public class Parabole {
 //				/ ((y2 - y1) + -fktr * (y3 - y2));
 //		bFactor = ((y2 - y1) - aFactor * (a2 - a1)) / (x2 - x1);
 //		c = y1 - (aFactor * a1 + bFactor * x1);
-//		System.out.println(aFactor + "x²+" + bFactor + "x+" + c);
+//		System.out.println(aFactor + "xï¿½+" + bFactor + "x+" + c);
 
 		// http://www.ina-de-brabandt.de/analysis/qf/parabel-aus-3punkten.html
 		// http://en.wikipedia.org/wiki/Projectile_motion
