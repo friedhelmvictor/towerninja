@@ -121,7 +121,7 @@ abstract public class AbstractStone {
 		}
 	}
 
-	private void setIsOnTower() {
+	protected void setIsOnTower() {
 		isOnTower = true;
 	}
 
@@ -173,5 +173,11 @@ abstract public class AbstractStone {
 	
 	protected void decreaseDestroyTime() {
 		destroyTimer--;
+	}
+	
+	public void putOnTower(){
+		setxLocation(exactXDestination());
+		setyLocation(exactYDestination());
+		isOnTower();
 	}
 }

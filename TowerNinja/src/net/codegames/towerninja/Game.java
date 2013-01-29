@@ -21,7 +21,7 @@ public class Game {
 	public Scoreboard scoreboard = new Scoreboard();
 	public Score score;
 	private static boolean startScreen = true;
-	private boolean lost = false;
+	private boolean gameover = false;
 	
 	private static final int TOWER_HEIGHT = 8;
 	private static final int TOWER_WIDTH = 5;
@@ -51,7 +51,7 @@ public class Game {
 	}
 
 	public void update(Vector<Player> players) {
-		
+		//startscreen
 		if(startScreen)
 		{
 			drawStartScreen();
@@ -62,16 +62,26 @@ public class Game {
 		}
 		else
 		{
-			if (System.currentTimeMillis() - mLastTimeStamp > NEW_STONE_DELAY) {
-				mLastTimeStamp = System.currentTimeMillis();
-				createStone();
+			//Game running
+			if(!gameover){
+				if (System.currentTimeMillis() - mLastTimeStamp > NEW_STONE_DELAY) {
+					mLastTimeStamp = System.currentTimeMillis();
+					createStone();
+				}
+				drawPlayerHands(players);
+				detectSlices(players);
+				removeStones();
+				moveStones();
+				drawStones();
+				displayScore();
+				checkGameover();
 			}
-			drawPlayerHands(players);
-			detectSlices(players);
-			removeStones();
-			moveStones();
-			drawStones();
-			displayScore();
+			//gameover
+			else{
+				drawScoreboard();
+				scoreboard.save("scores.txt");
+			}
+			
 		}
 	}
 
@@ -287,7 +297,13 @@ public class Game {
 	private void destroyStone(int i, int j) {
 		score.addScore(-1 * tower.get(i)[j].getPoints());
 		tower.get(i)[j].setDestroyed(true);
-		startScreen = false;
+		if(startScreen){
+			startScreen = false;
+			
+			tower.get(0)[0] = new Brick(50, 5, 0, 0);
+			tower.get(0)[0].putOnTower();
+		}
+		
 		// tower.get(i)[j] = null;
 	}
 
@@ -340,5 +356,17 @@ public class Game {
 				+ "../resources/speech-bubble-small.png");
 		mApplet.image(bubble, 420, 500-bubble.height );
 		//mApplet.text("Slice the Bat to start the game!", 500, 480-bubble.height/2);
+	}
+	
+	private boolean checkGameover(){
+		for (int i = 0; i < tower.size(); i++) {
+			for (int j = 0; j < tower.get(0).length; j++) {
+				if (tower.get(i)[j] != null && tower.get(i)[j].isOnTower()) {
+					return false;
+				}
+			}
+		}
+		gameover = true;
+		return true;
 	}
 }

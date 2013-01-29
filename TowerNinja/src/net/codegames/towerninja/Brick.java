@@ -10,9 +10,10 @@ public class Brick extends AbstractStone {
 		setxVelocity((exactXDestination() - xLocation) / 5000);
 		setyVelocity((exactYDestination() - yLocation) / 5000);
 		setPoints(5);
+		
 	}
+	
 
-	@Override
 	void draw(RendererInterface renderer) {
 		renderer.drawBrick(this);
 		
