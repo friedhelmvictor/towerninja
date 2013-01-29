@@ -22,6 +22,15 @@ abstract public class AbstractStone {
 	private int destroyTimer = 10;
 	// points a stone gives when hit tower or loose when sliced
 	private int points = 0;
+	private float startPositionX;
+
+	protected float getStartPositionX() {
+		return startPositionX;
+	}
+
+	protected void setStartPositionX(float startPositionX) {
+		this.startPositionX = startPositionX;
+	}
 
 	protected float getxLocation() {
 		return xLocation;
@@ -46,16 +55,16 @@ abstract public class AbstractStone {
 	protected void setDestination(float iDestination, float jDestination) {
 		this.iDestination = iDestination;
 		this.jDestination = jDestination;
-		this.mPath = new Parabole(10, Main.height,
-				10 + (exactXDestination() - 10) / 2, 50, exactXDestination(),
-				exactYDestination());
+		this.mPath = new Parabole(startPositionX, Main.height, startPositionX
+				+ (exactXDestination() - startPositionX) / 2, 50,
+				exactXDestination(), exactYDestination());
 	}
 
 	protected void updatePathWithLastPosition(float iDestination,
 			float jDestination) {
 		this.iDestination = iDestination;
 		this.jDestination = jDestination;
-		this.mPath = new Parabole(10, Main.height, getxLocation(),
+		this.mPath = new Parabole(startPositionX, Main.height, getxLocation(),
 				getyLocation(), exactXDestination(), exactYDestination());
 	}
 
@@ -111,7 +120,8 @@ abstract public class AbstractStone {
 	public void moveToDestination(float dT) {
 		if (isOnTower())
 			;
-		else if (getxLocation() + dT * getxVelocity() > exactXDestination()) {
+		else if ((Math.abs(getxLocation() - exactXDestination()) < 10)
+				&& (getPath().getY(getxLocation() + dT * getxVelocity()) > exactYDestination())) {
 			setxLocation(exactXDestination());
 			setyLocation(exactYDestination());
 			setIsOnTower();
@@ -158,19 +168,19 @@ abstract public class AbstractStone {
 	protected void setPoints(int points) {
 		this.points = points;
 	}
-	
+
 	protected void setDestroyed(boolean destroyed) {
 		this.isDestroyed = destroyed;
 	}
-	
+
 	protected boolean isDestroyed() {
 		return isDestroyed;
 	}
-	
+
 	protected int getDestroyTimer() {
 		return destroyTimer;
 	}
-	
+
 	protected void decreaseDestroyTime() {
 		destroyTimer--;
 	}

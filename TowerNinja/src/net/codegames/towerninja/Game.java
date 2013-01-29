@@ -172,15 +172,19 @@ public class Game {
 				if (tower.get(i)[j] == null) {
 					double rand = Math.random();
 					if (rand < 0.65d) {
-						tower.get(i)[j] = new Brick(50, 5, i, j);
+						tower.get(i)[j] = new Brick(randomXPosition(), 5, i, j);
 					} else {
-						tower.get(i)[j] = new Bomb(50, 5, i, j);
+						tower.get(i)[j] = new Bomb(randomXPosition(), 5, i, j);
 					}
 					return tower.get(i)[j];
 				}
 			}
 		}
 		return null;
+	}
+
+	private int randomXPosition() {
+		return (int) Math.abs((Math.round(Math.random()) * Main.width) - Math.random() * 100);
 	}
 
 	/**
@@ -352,6 +356,7 @@ public class Game {
 	 */
 	private void drawStartScreen(){
 		tower.get(0)[0] = new Bat(400,500,400,500);
+		// TODO: causes high memory, needs to be fixed
 		PImage bubble = mApplet.loadImage(mApplet.getCodeBase()
 				+ "../resources/speech-bubble-small.png");
 		mApplet.image(bubble, 420, 500-bubble.height );
