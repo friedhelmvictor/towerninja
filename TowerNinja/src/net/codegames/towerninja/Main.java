@@ -10,12 +10,12 @@ public class Main extends PApplet {
 	 * Set the value of KINECT_PRESENT to true if you actually have one
 	 * connected. Otherwise you won't be able to start the program.
 	 */
-	public static final boolean KINECT_PRESENT = true;
+	public static final boolean KINECT_PRESENT = false;
 
 	/**
 	 * When enabled, displays a frame counter
 	 */
-	private static final boolean DEV_MODE = false;
+	private static final boolean DEV_MODE = true;
 	
 	/**
 	 * 
@@ -54,7 +54,7 @@ public class Main extends PApplet {
 		soni = new SimpleOpenNI(this);
 		tracking = new Tracking(this, soni);
 
-		bg = loadImage(this.getCodeBase() + "../resources/background.png");
+		bg = loadImage("resources/background.png");
 	}
 
 	/**
@@ -74,6 +74,9 @@ public class Main extends PApplet {
 	private void displayDevOutput() {
 		fill(64);
 		noStroke();
+		textSize(12);
+		textAlign(LEFT);
+		
 		text("FPS: " + (int) frameRate, 10, 20);
 		
 		Runtime rt = Runtime.getRuntime();
