@@ -364,7 +364,7 @@ public class Game {
 	}
 	
 	private boolean checkGameover(){
-		for (int i = 0; i < tower.size(); i++) {
+		for (int i = 0; i < 1 /*tower.size()*/; i++) {
 			for (int j = 0; j < tower.get(0).length; j++) {
 				if (tower.get(i)[j] != null && tower.get(i)[j].isOnTower()) {
 					return false;

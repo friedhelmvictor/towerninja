@@ -42,6 +42,7 @@ public class Scoreboard extends PApplet implements java.io.Serializable {
 	 * @return scoreboard, array over Score
 	 */
 	public Score[] giveScoreboard(){
+		Collections.sort(scores);
 		return scores.toArray(new Score[scores.size()]);
 	}
 
@@ -74,6 +75,7 @@ public class Scoreboard extends PApplet implements java.io.Serializable {
 		        //deserialize the List
 		        List<Score> scores_new = (List<Score>)input.readObject();
 		        scores = scores_new;
+		        Collections.sort(scores);
 		        return scores_new;
 		      }
 		      finally{
