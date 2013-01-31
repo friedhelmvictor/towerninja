@@ -25,6 +25,7 @@ public class Game {
 	private static boolean startScreen = true;
 	private boolean gameover = false;
 
+	PImage bubble;
 	
 	private static final int TOWER_HEIGHT = 8;
 	private static final int TOWER_WIDTH = 5;
@@ -52,13 +53,15 @@ public class Game {
 			tower.add(new Brick[TOWER_WIDTH]);
 		}
 		
+		bubble = mApplet.loadImage(mApplet.getCodeBase()
+				+ "../resources/speech-bubble-small.png");
 	}
 
 	public void update(Vector<Player> players) {
 		//startscreen
 		if(startScreen)
 		{
-			drawStartScreen();
+			drawStartScreen(players);
 			drawPlayerHands(players);
 			detectSlices(players);
 			removeStones();
@@ -339,6 +342,7 @@ public class Game {
 	 * 
 	 */
 	private void displayScore() {
+		mApplet.textAlign(mApplet.LEFT);
 		mApplet.textSize(32);
 		mApplet.text("Score: " + this.score.getScore(), 10, 60);
 	}
@@ -374,13 +378,13 @@ public class Game {
 	/**
 	 * Draw the start screen.
 	 */
-	private void drawStartScreen(){
+	private void drawStartScreen(Vector<Player> players){
 		tower.get(0)[0] = new Bat(400,500,400,500);
-		// TODO: causes high memory, needs to be fixed
-		PImage bubble = mApplet.loadImage(mApplet.getCodeBase()
-				+ "../resources/speech-bubble-small.png");
-		mApplet.image(bubble, 420, 500-bubble.height );
-		//mApplet.text("Slice the Bat to start the game!", 500, 480-bubble.height/2);
+		
+		if (!players.isEmpty()) {
+			mApplet.image(bubble, 420, 500-bubble.height );
+//			mApplet.text("Slice the Bat to start the game!", 500, 480-bubble.height/2);
+		}
 	}
 	
 	private boolean checkGameover(){

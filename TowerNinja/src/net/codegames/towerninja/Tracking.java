@@ -220,5 +220,10 @@ public class Tracking {
 		userImage.updatePixels();
 		mApplet.image(userImage, 0, 0);
 	}
-
+	public PImage getPlayerPicture(){
+		PImage img = soni.depthImage();
+		
+		return img;
+	}
+	
 }

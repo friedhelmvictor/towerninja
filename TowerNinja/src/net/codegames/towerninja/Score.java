@@ -50,4 +50,9 @@ public class Score implements Comparable<Score>, Serializable{
             return -1;
 	}
 
+	private String randomName(){
+		
+		return "TowerNinja";
+	}
+	
 }

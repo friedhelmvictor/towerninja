@@ -4,3 +4,4 @@ Makefile
 cmake_install.cmake
 install_manifest.txt
 TowerNinja/.classpath
+.classpath
