@@ -1,6 +1,7 @@
 package net.codegames.towerninja;
 
 import java.util.Vector;
+import java.util.concurrent.TimeUnit;
 
 import processing.core.PApplet;
 import processing.core.PImage;
@@ -18,10 +19,12 @@ public class Game {
 	private PApplet mApplet;
 	private AppletRenderer mRenderer;
 	private long mLastTimeStamp = System.currentTimeMillis();
+	private long mStartTimeStamp = System.currentTimeMillis();
 	public Scoreboard scoreboard = new Scoreboard();
 	public Score score;
 	private static boolean startScreen = true;
 	private boolean gameover = false;
+
 	
 	private static final int TOWER_HEIGHT = 8;
 	private static final int TOWER_WIDTH = 5;
@@ -48,6 +51,7 @@ public class Game {
 		for (int i = 0; i < TOWER_HEIGHT; i++) {
 			tower.add(new Brick[TOWER_WIDTH]);
 		}
+		
 	}
 
 	public void update(Vector<Player> players) {
@@ -59,6 +63,7 @@ public class Game {
 			detectSlices(players);
 			removeStones();
 			drawStones();
+			
 		}
 		else
 		{
@@ -74,6 +79,7 @@ public class Game {
 				moveStones();
 				drawStones();
 				displayScore();
+				displayTime();
 				checkGameover();
 			}
 			//gameover
@@ -303,7 +309,7 @@ public class Game {
 		tower.get(i)[j].setDestroyed(true);
 		if(startScreen){
 			startScreen = false;
-			
+			mStartTimeStamp = System.currentTimeMillis();
 			tower.get(0)[0] = new Brick(50, 5, 0, 0);
 			tower.get(0)[0].putOnTower();
 		}
@@ -337,6 +343,20 @@ public class Game {
 		mApplet.text("Score: " + this.score.getScore(), 10, 60);
 	}
 
+	/**
+	 * Displays the Score in game
+	 * 
+	 */
+	private void displayTime() {
+		mApplet.textSize(32);
+		long time = System.currentTimeMillis()- mStartTimeStamp;
+		String time2 = String.format("%d:%d", 
+			    TimeUnit.MILLISECONDS.toMinutes(time),
+			    TimeUnit.MILLISECONDS.toSeconds(time) - 
+			    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(time)));
+		mApplet.text("Time: " +  time2, 10, 500);
+	}
+	
 	/**
 	 * Draw the Scoreboard
 	 * 
@@ -374,4 +394,5 @@ public class Game {
 		gameover = true;
 		return true;
 	}
+	
 }
