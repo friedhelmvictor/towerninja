@@ -15,7 +15,7 @@ public class Main extends PApplet {
 	/**
 	 * When enabled, displays a frame counter
 	 */
-	private static final boolean DEV_MODE = true;
+	private static final boolean DEV_MODE = false;
 	
 	/**
 	 * 
@@ -64,8 +64,15 @@ public class Main extends PApplet {
 	 */
 	public void draw() {
 		image(bg, 0, height - bg.height);
+		if(game.restart){
+			game = new Game(this);
+			game.setStartScreen(false);
+		}
+			
+		
 		game.update(tracking.getPlayers());
-	
+		
+		
 		if (DEV_MODE) {
 			displayDevOutput();
 		}

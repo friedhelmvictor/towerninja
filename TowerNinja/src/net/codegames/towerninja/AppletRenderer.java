@@ -86,8 +86,14 @@ public class AppletRenderer implements RendererInterface {
 
 	private void drawPoints(AbstractStone stone) {
 		mApplet.textAlign(mApplet.CENTER);
-		mApplet.text(-1 * stone.getPoints(), stone.getxLocation() + (stone.getWidth() / 2),
-				stone.getyLocation());
+		if(stone.getClass().getSimpleName() == "Bomb")
+			mApplet.text(stone.getPoints(), stone.getxLocation() + (stone.getWidth() / 2),
+					stone.getyLocation());
+		else{
+			mApplet.text(-1 * stone.getPoints(), stone.getxLocation() + (stone.getWidth() / 2),
+					stone.getyLocation());
+		}
+		
 
 	}
 
