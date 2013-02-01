@@ -10,12 +10,12 @@ public class Main extends PApplet {
 	 * Set the value of KINECT_PRESENT to true if you actually have one
 	 * connected. Otherwise you won't be able to start the program.
 	 */
-	public static final boolean KINECT_PRESENT = true;
+	public static final boolean KINECT_PRESENT = false;
 
 	/**
 	 * When enabled, displays a frame counter
 	 */
-	private static final boolean DEV_MODE = false;
+	private static final boolean DEV_MODE = true;
 	
 	/**
 	 * 
@@ -81,10 +81,12 @@ public class Main extends PApplet {
 	private void displayDevOutput() {
 		fill(64);
 		noStroke();
-		text("FPS: " + (int) frameRate, 10, 20);
+		textAlign(LEFT);
+		textSize(12);
+		text("FPS: " + (int) frameRate, 10, 60);
 		
 		Runtime rt = Runtime.getRuntime();
-		text("Memory: " + Math.round((rt.totalMemory() - rt.freeMemory())/(1024*1024)) + " MB", 10, 35);
+		text("Memory: " + Math.round((rt.totalMemory() - rt.freeMemory())/(1024*1024)) + " MB", 10, 75);
 	}
 
 	

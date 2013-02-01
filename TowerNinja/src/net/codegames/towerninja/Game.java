@@ -436,9 +436,9 @@ public class Game {
 	 */
 	private void drawScoreboard(Vector<Player> players) {
 		Score[] scoreboardArray = this.scoreboard.giveScoreboard();
+		mApplet.textSize(24);
 		mApplet.textAlign(mApplet.LEFT);
 		//mApplet.text("HIGHSCORE" , 10, 50);
-		
 		
 		mApplet.text("PLACE" , 10, 80);
 		mApplet.text("DATE", 120, 80);
@@ -450,22 +450,18 @@ public class Game {
 			mApplet.text(scoreboardArray[i].getScore(), 520, 110 + i*30);
 			mApplet.text(scoreboardArray[i].getTime(), 650, 110 + i*30);
 		}
-		tower.get(0)[0] = new Bat(400,500,400,500);
-		
-		if (!players.isEmpty()) {
-			mApplet.image(bubble, 420, 500-bubble.height );
-//			mApplet.text("Slice the Bat to start the game!", 500, 480-bubble.height/2);
-		}
+
+		drawStartScreen(players);
 	}
 	
 	/**
 	 * Draw the start screen.
 	 */
 	private void drawStartScreen(Vector<Player> players){
-		tower.get(0)[0] = new Bat(400,500,400,500);
+		tower.get(0)[0] = new Bat(Main.width/2 - 112, Main.height/2, 400, 500);
 		
 		if (!players.isEmpty()) {
-			mApplet.image(bubble, 420, 500-bubble.height );
+			mApplet.image(bubble, Main.width/2 - bubble.width/2, Main.height/2-bubble.height );
 //			mApplet.text("Slice the Bat to start the game!", 500, 480-bubble.height/2);
 		}
 	}
