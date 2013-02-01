@@ -1,10 +1,10 @@
 package net.codegames.towerninja;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Vector;
-import java.util.concurrent.TimeUnit;
 
 import processing.core.PApplet;
-import processing.core.PConstants;
 import processing.core.PImage;
 
 /**
@@ -24,9 +24,11 @@ public class Game {
 	public Scoreboard scoreboard = new Scoreboard();
 	public Score score;
 	private boolean startScreen = true;
+
 	public boolean isStartScreen() {
 		return startScreen;
 	}
+
 	public void setStartScreen(boolean startScreen) {
 		this.startScreen = startScreen;
 	}
@@ -56,7 +58,8 @@ public class Game {
 		this.mApplet = applet;
 		init();
 	}
-	private void init(){
+
+	private void init() {
 		gameover = false;
 		restart = false;
 		this.mRenderer = new AppletRenderer(mApplet);
@@ -66,29 +69,27 @@ public class Game {
 		for (int i = 0; i < TOWER_HEIGHT; i++) {
 			tower.add(new Brick[TOWER_WIDTH]);
 		}
-		
+
 		bubble = mApplet.loadImage(mApplet.getCodeBase()
 				+ "../resources/speech-bubble-small.png");
 	}
+
 	public void update(Vector<Player> players) {
-		//startscreen
-		if(startScreen)
-		{
+		// startscreen
+		if (startScreen) {
 			drawStartScreen(players);
 			drawPlayerHands(players);
 			detectSlices(players);
 			removeStones();
 			drawStones();
 			once = true;
-			
-		}
-		else
-		{
-			//Game running
-			if(!gameover){
-				if(firstGameStart){
-					
-					if(gameover)
+
+		} else {
+			// Game running
+			if (!gameover) {
+				if (firstGameStart) {
+
+					if (gameover)
 						restart = true;
 					else
 						restart = false;
@@ -112,20 +113,20 @@ public class Game {
 				displayTime();
 				checkGameover();
 			}
-			//gameover
-			else{
+			// gameover
+			else {
 				drawScoreboard(players);
-				if(once){
+				if (once) {
 					scoreboard.save("scores.txt");
 					firstGameStart = true;
 					once = false;
 				}
-				
+
 				drawPlayerHands(players);
 				detectSlices(players);
 				removeStones();
 				drawStones();
-				
+
 			}
 		}
 	}
@@ -229,7 +230,8 @@ public class Game {
 	}
 
 	private int randomXPosition() {
-		return (int) Math.abs((Math.round(Math.random()) * Main.width) - Math.random() * 100);
+		return (int) Math.abs((Math.round(Math.random()) * Main.width)
+				- Math.random() * 100);
 	}
 
 	/**
@@ -346,13 +348,12 @@ public class Game {
 	private void destroyStone(int i, int j) {
 		score.addScore(-1 * tower.get(i)[j].getPoints());
 		tower.get(i)[j].setDestroyed(true);
-		if(startScreen)
+		if (startScreen)
 			startScreen = false;
-		if(gameover){
+		if (gameover) {
 			restart = true;
 		}
-			
-		
+
 		// tower.get(i)[j] = null;
 	}
 
@@ -363,7 +364,8 @@ public class Game {
 	private void removeStones() {
 		for (int i = 0; i < tower.size(); i++) {
 			for (int j = 0; j < tower.get(0).length; j++) {
-				if (tower.get(i)[j] != null && (tower.get(i)[j].isDestroyed() || gameover)) {
+				if (tower.get(i)[j] != null
+						&& (tower.get(i)[j].isDestroyed() || gameover)) {
 					if (tower.get(i)[j].getDestroyTimer() == 0) {
 						tower.get(i)[j] = null;
 					}
@@ -371,7 +373,7 @@ public class Game {
 			}
 		}
 	}
-	
+
 	/**
 	 * Loops through the tower and removes all stones with finished destroy
 	 * animation.
@@ -383,53 +385,34 @@ public class Game {
 			}
 		}
 	}
-	
 
 	/**
 	 * Displays the Score in game
 	 * 
 	 */
 	private void displayScore() {
-		mApplet.textAlign(mApplet.LEFT);
+		mApplet.textAlign(mApplet.LEFT, mApplet.TOP);
 		mApplet.textSize(32);
-		mApplet.text("SCORE: " + this.score.getScore(), 10, 30);
+		mApplet.text("SCORE: " + this.score.getScore(), 10, 10);
 	}
 
 	/**
 	 * Displays the Score in game
 	 * 
 	 */
-	
+
 	private void displayTime() {
+
+		long elapsedTime = System.currentTimeMillis() - mStartTimeStamp;
+		String time = new SimpleDateFormat("mm:ss")
+				.format(new Date(elapsedTime));
+		score.setTime(time);
+
 		mApplet.textSize(32);
-		long time = System.currentTimeMillis()- mStartTimeStamp;
-		
-		long minutes = TimeUnit.MILLISECONDS.toMinutes(time);
-		
-	
-		long seconds = TimeUnit.MILLISECONDS.toSeconds(time) - 
-			    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(time));
-		String minuteFirstDigit = "";
-		String secondFirstDigit = "";
-		
-		if(minutes < 10){
-			minuteFirstDigit = "0";
-		}
-			
-		if(seconds < 10){
-			secondFirstDigit = "0";
-		}
-		String time2 = String.format("%s%d:%s%d",
-				minuteFirstDigit,
-			    minutes,
-			    secondFirstDigit,
-			    seconds
-			    );
-		score.setTime(time2);
-		mApplet.textAlign(mApplet.RIGHT);
-		mApplet.text("" +  time2, 950, 30);
+		mApplet.textAlign(mApplet.RIGHT, mApplet.TOP);
+		mApplet.text("" + time, Main.width - 10, 10);
 	}
-	
+
 	/**
 	 * Draw the Scoreboard
 	 * 
@@ -438,36 +421,39 @@ public class Game {
 		Score[] scoreboardArray = this.scoreboard.giveScoreboard();
 		mApplet.textSize(24);
 		mApplet.textAlign(mApplet.LEFT);
-		//mApplet.text("HIGHSCORE" , 10, 50);
-		
-		mApplet.text("PLACE" , 10, 80);
+		// mApplet.text("HIGHSCORE" , 10, 50);
+
+		mApplet.text("PLACE", 10, 80);
 		mApplet.text("DATE", 120, 80);
 		mApplet.text("POINTS", 520, 80);
 		mApplet.text("TIME", 650, 80);
-		for(int i = 0; i < scoreboardArray.length && i <= 9; i++){
-			mApplet.text(i+1 , 10, 110 + i*30);
-			mApplet.text(scoreboardArray[i].getName(), 120, 110 + i*30);
-			mApplet.text(scoreboardArray[i].getScore(), 520, 110 + i*30);
-			mApplet.text(scoreboardArray[i].getTime(), 650, 110 + i*30);
+		for (int i = 0; i < scoreboardArray.length && i <= 9; i++) {
+			mApplet.text(i + 1, 10, 110 + i * 30);
+			mApplet.text(scoreboardArray[i].getName(), 120, 110 + i * 30);
+			mApplet.text(scoreboardArray[i].getScore(), 520, 110 + i * 30);
+			mApplet.text(scoreboardArray[i].getTime(), 650, 110 + i * 30);
 		}
 
 		drawStartScreen(players);
 	}
-	
+
 	/**
 	 * Draw the start screen.
 	 */
-	private void drawStartScreen(Vector<Player> players){
-		tower.get(0)[0] = new Bat(Main.width/2 - 112, Main.height/2, 400, 500);
-		
+	private void drawStartScreen(Vector<Player> players) {
+		tower.get(0)[0] = new Bat(Main.width / 2 - 112, Main.height / 2, 400,
+				500);
+
 		if (!players.isEmpty()) {
-			mApplet.image(bubble, Main.width/2 - bubble.width/2, Main.height/2-bubble.height );
-//			mApplet.text("Slice the Bat to start the game!", 500, 480-bubble.height/2);
+			mApplet.image(bubble, Main.width / 2 - bubble.width / 2,
+					Main.height / 2 - bubble.height);
+			// mApplet.text("Slice the Bat to start the game!", 500,
+			// 480-bubble.height/2);
 		}
 	}
-	
-	private boolean checkGameover(){
-		for (int i = 0; i < 1 /*tower.size()*/; i++) {
+
+	private boolean checkGameover() {
+		for (int i = 0; i < 1 /* tower.size() */; i++) {
 			for (int j = 0; j < tower.get(0).length; j++) {
 				if (tower.get(i)[j] != null && tower.get(i)[j].isOnTower()) {
 					return false;
@@ -478,5 +464,5 @@ public class Game {
 		removeAllStones();
 		return true;
 	}
-	
+
 }
