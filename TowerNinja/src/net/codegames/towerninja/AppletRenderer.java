@@ -6,7 +6,8 @@ import processing.core.PImage;
 public class AppletRenderer implements RendererInterface {
 
 	private PApplet mApplet;
-	private PImage mBatImage, mBombImage, mBombSlice, mBombFade, mBrickImage, mBrickSlice, mBrickFade;
+	private PImage mBatImage, mBombImage, mBombSlice, mBombFade, mBrickImage,
+			mBrickSlice, mBrickFade;
 
 	public AppletRenderer(PApplet mApplet) {
 		super();
@@ -59,7 +60,7 @@ public class AppletRenderer implements RendererInterface {
 			mApplet.image(mBombImage, bomb.getxLocation(), bomb.getyLocation());
 		} else {
 			drawPoints(bomb);
-			if (bomb.getDestroyTimer() > 8) {
+			if (bomb.getDestroyTimer() > 7) {
 				mApplet.image(mBombSlice, bomb.getxLocation(),
 						bomb.getyLocation());
 			} else {
@@ -90,15 +91,17 @@ public class AppletRenderer implements RendererInterface {
 
 	private void drawPoints(AbstractStone stone) {
 		mApplet.textAlign(mApplet.CENTER);
-		if(stone.getClass().getSimpleName() == "Bomb")
-			mApplet.text(stone.getPoints(), stone.getxLocation() + (stone.getWidth() / 2),
+		mApplet.fill(128, 0, 0);
+		mApplet.textSize(36);
+		if (stone.getClass().getSimpleName() == "Bomb")
+			mApplet.text(stone.getPoints(),
+					stone.getxLocation() + (stone.getWidth() / 2),
 					stone.getyLocation());
-		else{
-			mApplet.text(-1 * stone.getPoints(), stone.getxLocation() + (stone.getWidth() / 2),
+		else {
+			mApplet.text(-1 * stone.getPoints(),
+					stone.getxLocation() + (stone.getWidth() / 2),
 					stone.getyLocation());
 		}
-		
-
 	}
 
 }

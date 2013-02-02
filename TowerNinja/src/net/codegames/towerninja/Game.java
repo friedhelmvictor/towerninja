@@ -23,8 +23,8 @@ import processing.core.PImage;
  */
 public class Game {
 
-	private final long NEW_STONE_DELAY = 700L;
-	private final float MIN_SPEED = 20;
+	private final long NEW_STONE_DELAY = 500L;
+	private final float MIN_SPEED = 30;
 	private PApplet mApplet;
 	private AppletRenderer mRenderer;
 	private long mLastTimeStamp = System.currentTimeMillis();
@@ -306,9 +306,9 @@ public class Game {
 			int color = currentPlayer.getColor();
 
 			mApplet.noFill();
-			mApplet.strokeWeight(12);
-			mApplet.strokeJoin(mApplet.MITER);
-			mApplet.strokeCap(mApplet.PROJECT);
+			mApplet.strokeWeight(20);
+			mApplet.strokeJoin(mApplet.ROUND);
+			mApplet.strokeCap(mApplet.ROUND);
 			mApplet.stroke(color, 32);
 			// left hand
 			if (currentPlayer.getLeftSpeed() > MIN_SPEED) {
@@ -438,7 +438,8 @@ public class Game {
 	 */
 	private void displayScore() {
 		mApplet.textAlign(mApplet.LEFT, mApplet.TOP);
-		mApplet.textSize(32);
+		mApplet.textSize(44);
+		mApplet.fill(64);
 		mApplet.text("SCORE: " + this.score.getScore(), 10, 10);
 	}
 
@@ -454,7 +455,8 @@ public class Game {
 				.format(new Date(elapsedTime));
 		score.setTime(time);
 
-		mApplet.textSize(32);
+		mApplet.textSize(44);
+		mApplet.fill(64);
 		mApplet.textAlign(mApplet.RIGHT, mApplet.TOP);
 		mApplet.text("" + time, Main.width - 10, 10);
 	}

@@ -14,8 +14,8 @@ abstract public class AbstractStone {
 	private float width = 84;
 	private float height = 60;
 	// variables for movement
-	private float yVelocity = 0.8f;
-	private float xVelocity = 0.6f;
+	private float yVelocity = 0.2f;
+	private float xVelocity = 0.1f;
 	private Parabole mPath;
 	private boolean isOnTower = false;
 	private boolean isDestroyed = false;

@@ -1,6 +1,7 @@
 package net.codegames.towerninja;
 
 import processing.core.PApplet;
+import processing.core.PFont;
 import processing.core.PImage;
 import SimpleOpenNI.SimpleOpenNI;
 
@@ -37,6 +38,8 @@ public class Main extends PApplet {
 	
 	PImage bg;
 	PImage fg;
+	
+	private PFont katana;
 
 	/**
 	 * Initial setup of the Applet. Also creating the {@link Game} and
@@ -49,6 +52,10 @@ public class Main extends PApplet {
 		size(width, height);
 		frameRate(30);
 		smooth();
+		
+		katana = loadFont(getCodeBase()
+					+ "../resources/Katana-54.vlw");
+		textFont(katana);
 
 		game = new Game(this);
 
