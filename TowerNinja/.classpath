@@ -1,32 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
-	<classpathentry kind="lib" path="/Users/MaxPower/Documents/SimpleOpenNI/library/SimpleOpenNI.jar">
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
+	<classpathentry kind="lib" path="C:/Users/twat/Downloads/processing-2.0b5-windows64/processing-2.0b5/core/library/core.jar"/>
+	<classpathentry kind="lib" path="C:/Program Files/OpenNI/Bin64/org.OpenNI.jar">
 		<attributes>
-			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="/Users/MaxPower/Documents/SimpleOpenNI/library"/>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="C:/Program Files/OpenNI/Bin64"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="/Users/MaxPower/Development/Kinect/OpenNI-Bin-Dev-MacOSX-v1.5.4.0/Jar/org.OpenNI.jar">
+	<classpathentry kind="lib" path="C:/Users/twat/Downloads/SimpleOpenNI/library/SimpleOpenNI.jar">
 		<attributes>
-			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="/Users/MaxPower/Development/Kinect/OpenNI-Bin-Dev-MacOSX-v1.5.4.0/Jar"/>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="C:/Users/twat/Downloads/SimpleOpenNI/library"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="/Users/MaxPower/Documents/Processing/Contents/Resources/Java/core.jar">
-		<attributes>
-			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="/Users/MaxPower/Documents/Processing/Contents/Resources/Java"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="/Users/MaxPower/Development/Minim/library/minim.jar">
-		<attributes>
-			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="/Users/MaxPower/Development/Minim/library"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="/Users/MaxPower/Development/Minim/library/jl1.0.jar"/>
-	<classpathentry kind="lib" path="/Users/MaxPower/Development/Minim/library/tritonus_share.jar"/>
-	<classpathentry kind="lib" path="/Users/MaxPower/Development/Minim/library/jsminim.jar"/>
-	<classpathentry kind="lib" path="/Users/MaxPower/Development/Minim/library/mp3spi1.9.4.jar"/>
-	<classpathentry kind="lib" path="/Users/MaxPower/Documents/Processing/Contents/Resources/Java/modes/java/libraries/minim/library/minim-spi.jar"/>
-	<classpathentry kind="lib" path="/Users/MaxPower/Development/Minim/library/tritonus_aos.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

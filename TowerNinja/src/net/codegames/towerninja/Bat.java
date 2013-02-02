@@ -7,9 +7,11 @@ public class Bat extends Brick {
 			int jDestination) {
 		super(xLocation, yLocation, iDestination, jDestination);
 		setPoints(0);
+		setWidth(225);
+		setHeight(100);
 	}
 
-	void draw(RendererInterface renderer) {
+	public void draw(RendererInterface renderer) {
 		renderer.drawBat(this);
 		
 	}

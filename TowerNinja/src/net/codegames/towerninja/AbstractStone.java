@@ -44,7 +44,7 @@ abstract public class AbstractStone {
 		return yLocation;
 	}
 
-	protected void setyLocation(float yLocation) {
+	public void setyLocation(float yLocation) {
 		this.yLocation = yLocation;
 	}
 
@@ -52,7 +52,7 @@ abstract public class AbstractStone {
 		return iDestination;
 	}
 
-	protected void setDestination(float iDestination, float jDestination) {
+	public void setDestination(float iDestination, float jDestination) {
 		this.iDestination = iDestination;
 		this.jDestination = jDestination;
 		this.mPath = new Parabole(startPositionX, Main.height, startPositionX
@@ -60,7 +60,7 @@ abstract public class AbstractStone {
 				exactXDestination(), exactYDestination());
 	}
 
-	protected void updatePathWithLastPosition(float iDestination,
+	public void updatePathWithLastPosition(float iDestination,
 			float jDestination) {
 		this.iDestination = iDestination;
 		this.jDestination = jDestination;
@@ -109,7 +109,7 @@ abstract public class AbstractStone {
 				+ (getjDestination() * (getWidth()));
 	}
 
-	protected float exactYDestination() {
+	public float exactYDestination() {
 		return Main.height + 6 - ((getiDestination() + 1) * (getHeight()));
 	}
 
@@ -161,7 +161,7 @@ abstract public class AbstractStone {
 
 	abstract void draw(RendererInterface renderer);
 
-	protected int getPoints() {
+	public int getPoints() {
 		return points;
 	}
 
@@ -169,15 +169,15 @@ abstract public class AbstractStone {
 		this.points = points;
 	}
 
-	protected void setDestroyed(boolean destroyed) {
+	public void setDestroyed(boolean destroyed) {
 		this.isDestroyed = destroyed;
 	}
 
-	protected boolean isDestroyed() {
+	public boolean isDestroyed() {
 		return isDestroyed;
 	}
 
-	protected int getDestroyTimer() {
+	public int getDestroyTimer() {
 		return destroyTimer;
 	}
 

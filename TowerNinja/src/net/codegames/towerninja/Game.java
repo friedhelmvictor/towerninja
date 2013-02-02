@@ -4,6 +4,14 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Vector;
 
+import net.codegames.towerninja.AppletRenderer;
+import net.codegames.towerninja.Bat;
+import net.codegames.towerninja.Bomb;
+import net.codegames.towerninja.Brick;
+import net.codegames.towerninja.Main;
+import net.codegames.towerninja.Player;
+import net.codegames.towerninja.Score;
+import net.codegames.towerninja.Scoreboard;
 import processing.core.PApplet;
 import processing.core.PImage;
 
@@ -74,6 +82,38 @@ public class Game {
 				+ "../resources/speech-bubble-small.png");
 	}
 
+	private boolean existsCompleteStoneLine3() {
+		boolean isComplete = true;
+		for (int i = 0; i < TOWER_WIDTH; i++) {
+			if (tower.get(4)[i] == null || !tower.get(4)[i].isOnTower()) {
+				isComplete = false;
+			}
+		}
+		return isComplete;
+	}
+
+	private void removeStoneLine0() {
+		if (tower.get(0)[0].isDestroyed()) {
+			tower.remove(0);
+			tower.add(new Brick[TOWER_WIDTH]);
+			for (int i = 0; i < TOWER_HEIGHT; i++) {
+				for (int j = 0; j < TOWER_WIDTH; j++) {
+					if (tower.get(i)[j] != null) {
+						tower.get(i)[j].setDestination(i, j);
+						if (tower.get(i)[j].isOnTower())
+							tower.get(i)[j].setyLocation(tower.get(i)[j]
+									.exactYDestination());
+					}
+				}
+			}
+		} else { 
+			for (int i = 0; i < TOWER_WIDTH; i++) {
+				tower.get(0)[i].setDestroyed(true);
+			}
+		}
+
+	}
+
 	public void update(Vector<Player> players) {
 		// startscreen
 		if (startScreen) {
@@ -108,6 +148,10 @@ public class Game {
 				detectSlices(players);
 				removeStones();
 				moveStones();
+				if (existsCompleteStoneLine3())
+					// System.out.println("3rd line complete");
+					removeStoneLine0();
+
 				drawStones();
 				displayScore();
 				displayTime();
@@ -217,7 +261,7 @@ public class Game {
 			for (int j = 0; j < tower.get(i).length; j++) {
 				if (tower.get(i)[j] == null) {
 					double rand = Math.random();
-					if (rand < 0.05d) {
+					if (rand < 0.95d) {
 						tower.get(i)[j] = new Brick(randomXPosition(), 5, i, j);
 					} else {
 						tower.get(i)[j] = new Bomb(randomXPosition(), 5, i, j);

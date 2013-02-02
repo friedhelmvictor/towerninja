@@ -18,7 +18,7 @@ public class Brick extends AbstractStone {
 	}
 	
 
-	void draw(RendererInterface renderer) {
+	public void draw(RendererInterface renderer) {
 		renderer.drawBrick(this);
 
 	}

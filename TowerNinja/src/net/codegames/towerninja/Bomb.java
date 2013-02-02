@@ -9,7 +9,7 @@ public class Bomb extends Brick {
 	}
 
 	@Override
-	void draw(RendererInterface renderer) {
+	public void draw(RendererInterface renderer) {
 		renderer.drawBomb(this);
 
 	}
