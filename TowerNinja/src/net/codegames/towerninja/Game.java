@@ -55,6 +55,7 @@ public class Game {
 	 * position already. It will fly towards that position though.
 	 */
 	private Vector<Brick[]> tower = new Vector<Brick[]>();
+	private int diffCounter = 0;
 
 	/**
 	 * Game constructor
@@ -95,6 +96,7 @@ public class Game {
 	private void removeStoneLine0() {
 		if (tower.get(0)[0].isDestroyed()) {
 			tower.remove(0);
+			diffCounter ++;
 			tower.add(new Brick[TOWER_WIDTH]);
 			for (int i = 0; i < TOWER_HEIGHT; i++) {
 				for (int j = 0; j < TOWER_WIDTH; j++) {
@@ -261,7 +263,7 @@ public class Game {
 			for (int j = 0; j < tower.get(i).length; j++) {
 				if (tower.get(i)[j] == null) {
 					double rand = Math.random();
-					if (rand < 0.95d) {
+					if (rand < 0.9d - diffCounter/20.0) {
 						tower.get(i)[j] = new Brick(randomXPosition(), 5, i, j);
 					} else {
 						tower.get(i)[j] = new Bomb(randomXPosition(), 5, i, j);
