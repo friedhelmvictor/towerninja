@@ -23,7 +23,7 @@ import processing.core.PImage;
  */
 public class Game {
 
-	private final long NEW_STONE_DELAY = 500L;
+	private final long NEW_STONE_DELAY = 700L;
 	private final float MIN_SPEED = 20;
 	private PApplet mApplet;
 	private AppletRenderer mRenderer;
@@ -276,8 +276,8 @@ public class Game {
 	}
 
 	private int randomXPosition() {
-		return (int) Math.abs((Math.round(Math.random()) * Main.width)
-				- Math.random() * 100);
+		return (int) ((Math.round(Math.random()) * Main.width)
+				- (Math.random()-0.5) * 120) - 42;
 	}
 
 	/**

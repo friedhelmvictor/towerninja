@@ -36,6 +36,7 @@ public class Main extends PApplet {
 	private SimpleOpenNI soni;
 	
 	PImage bg;
+	PImage fg;
 
 	/**
 	 * Initial setup of the Applet. Also creating the {@link Game} and
@@ -55,6 +56,8 @@ public class Main extends PApplet {
 		tracking = new Tracking(this, soni);
 		bg = loadImage(getCodeBase()
 				+ "../resources/background.png");
+		fg = loadImage(getCodeBase()
+				+ "../resources/foreground.png");
 	}
 
 	/**
@@ -76,6 +79,8 @@ public class Main extends PApplet {
 		if (DEV_MODE) {
 			displayDevOutput();
 		}
+		
+		image(fg, 0, height - fg.height);
 	}
 
 	private void displayDevOutput() {
