@@ -103,7 +103,14 @@ public class Game {
 	}
 
 	private void removeStoneLine0() {
-		if (tower.get(0)[0].isDestroyed()) {
+		if (tower.get(0)[0] != null && !tower.get(0)[0].isDestroyed()) {
+			System.out.println("distreud");
+			for (int i = 0; i < TOWER_WIDTH; i++) {
+				tower.get(0)[i].setDestroyed(true);
+			}
+		}
+		else if (tower.get(0)[0].isDestroyed() && tower.get(0)[0].getDestroyTimer() == 0) {
+			System.out.println("riemuf");
 			tower.remove(0);
 			diffCounter ++;
 			tower.add(new Brick[TOWER_WIDTH]);
@@ -116,10 +123,6 @@ public class Game {
 									.exactYDestination());
 					}
 				}
-			}
-		} else { 
-			for (int i = 0; i < TOWER_WIDTH; i++) {
-				tower.get(0)[i].setDestroyed(true);
 			}
 		}
 
@@ -157,12 +160,12 @@ public class Game {
 				}
 				drawPlayerHands(players);
 				detectSlices(players);
-				removeStones();
 				moveStones();
 				if (existsCompleteStoneLine3())
 					// System.out.println("3rd line complete");
 					removeStoneLine0();
 
+				removeStones();
 				drawStones();
 				displayScore();
 				displayTime();
@@ -512,7 +515,7 @@ public class Game {
 	}
 
 	private boolean checkGameover() {
-		for (int i = 0; i < 1 /* tower.size() */; i++) {
+		for (int i = 0; i < 2 /* tower.size() */; i++) {
 			for (int j = 0; j < tower.get(0).length; j++) {
 				if (tower.get(i)[j] != null && tower.get(i)[j].isOnTower()) {
 					return false;
