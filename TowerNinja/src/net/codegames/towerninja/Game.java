@@ -80,7 +80,7 @@ public class Game {
 		}
 
 		bubble = mApplet.loadImage(mApplet.getCodeBase()
-				+ "../resources/speech-bubble-small.png");
+				+ "../resources/speechbubble.png");
 	}
 
 	private boolean existsCompleteStoneLine3() {

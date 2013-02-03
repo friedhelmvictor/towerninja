@@ -13,7 +13,7 @@ public class AppletRenderer implements RendererInterface {
 		super();
 		this.mApplet = mApplet;
 		mBatImage = mApplet.loadImage(mApplet.getCodeBase()
-				+ "../resources/bat2.png");
+				+ "../resources/bat.png");
 		mBombImage = mApplet.loadImage(mApplet.getCodeBase()
 				+ "../resources/bomb.png");
 		mBombSlice = mApplet.loadImage(mApplet.getCodeBase()
