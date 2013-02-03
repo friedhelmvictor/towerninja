@@ -13,6 +13,7 @@ import net.codegames.towerninja.Player;
 import net.codegames.towerninja.Score;
 import net.codegames.towerninja.Scoreboard;
 import processing.core.PApplet;
+import processing.core.PFont;
 import processing.core.PImage;
 
 /**
@@ -56,6 +57,8 @@ public class Game {
 	 */
 	private Vector<Brick[]> tower = new Vector<Brick[]>();
 	private int diffCounter = 0;
+	
+	PFont katana, myriad;
 
 	/**
 	 * Game constructor
@@ -81,6 +84,12 @@ public class Game {
 
 		bubble = mApplet.loadImage(mApplet.getCodeBase()
 				+ "../resources/speechbubble.png");
+		
+		katana = mApplet.loadFont(mApplet.getCodeBase()
+				+ "../resources/Katana-54.vlw");
+		myriad = mApplet.loadFont(mApplet.getCodeBase()
+				+ "../resources/MyriadPro-32.vlw");
+		mApplet.textFont(katana);
 	}
 
 	private boolean existsCompleteStoneLine3() {
@@ -467,20 +476,22 @@ public class Game {
 	 */
 	private void drawScoreboard(Vector<Player> players) {
 		Score[] scoreboardArray = this.scoreboard.giveScoreboard();
-		mApplet.textSize(24);
+		mApplet.textSize(36);
 		mApplet.textAlign(mApplet.LEFT);
-		// mApplet.text("HIGHSCORE" , 10, 50);
-
-		mApplet.text("PLACE", 10, 80);
-		mApplet.text("DATE", 120, 80);
-		mApplet.text("POINTS", 520, 80);
-		mApplet.text("TIME", 650, 80);
+		mApplet.text("PLACE", 110, 50);
+		mApplet.text("DATE", 220, 50);
+		mApplet.text("POINTS", 620, 50);
+		mApplet.text("TIME", 750, 50);
+		
+		mApplet.textFont(myriad);
+		mApplet.textSize(22);
 		for (int i = 0; i < scoreboardArray.length && i <= 9; i++) {
-			mApplet.text(i + 1, 10, 110 + i * 30);
-			mApplet.text(scoreboardArray[i].getName(), 120, 110 + i * 30);
-			mApplet.text(scoreboardArray[i].getScore(), 520, 110 + i * 30);
-			mApplet.text(scoreboardArray[i].getTime(), 650, 110 + i * 30);
+			mApplet.text(i + 1, 110, 80 + i * 30);
+			mApplet.text(scoreboardArray[i].getName(), 220, 80 + i * 30);
+			mApplet.text(scoreboardArray[i].getScore(), 620, 80 + i * 30);
+			mApplet.text(scoreboardArray[i].getTime(), 750, 80 + i * 30);
 		}
+		mApplet.textFont(katana);
 
 		drawStartScreen(players);
 	}
