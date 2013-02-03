@@ -189,9 +189,9 @@ public class Tracking {
 	 * colors on the background.
 	 */
 	private void drawShadows() {
-		// refresh the image only every third frame
-		drawShadows = (drawShadows + 1) % 3;
-		if ((drawShadows % 3) != 0 && players.size() > 0) {
+		// refresh the image only every fourth frame
+		drawShadows = (drawShadows + 1) % 4;
+		if ((drawShadows % 4) != 0 && players.size() > 0) {
 			mApplet.image(userImage, 0, 0);
 			return;
 		}
@@ -199,13 +199,13 @@ public class Tracking {
 		userImage = mApplet.createImage(mApplet.width, mApplet.height,
 				mApplet.ARGB);
 		soni.getUserPixels(SimpleOpenNI.USERS_ALL, userMap);
-		int blockWidth = (int) (sizeMultiplier * 8);
-		for (int y = 0; y < soni.depthHeight(); y += 8) {
-			for (int x = 0; x < soni.depthWidth(); x += 8) {
+		int blockWidth = (int) (sizeMultiplier * 2);
+		for (int y = 0; y < soni.depthHeight(); y += 2) {
+			for (int x = 0; x < soni.depthWidth(); x += 2) {
 				int i = x + y * soni.depthWidth();
 				for (int p = 0; p < players.size(); p++) {
 					if (userMap[i] == players.get(p).getUserId()) {
-						// paint whole block (normally 12 x 12 pixels)
+						// paint whole block (normally 3 x 3 pixels)
 						for (int j = 0; j < blockWidth; j++) {
 							for (int k = 0; k < blockWidth; k++) {
 								userImage.pixels[(int) (x * sizeMultiplier) + j
