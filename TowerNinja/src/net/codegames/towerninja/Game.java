@@ -104,13 +104,11 @@ public class Game {
 
 	private void removeStoneLine0() {
 		if (tower.get(0)[0] != null && !tower.get(0)[0].isDestroyed()) {
-			System.out.println("distreud");
 			for (int i = 0; i < TOWER_WIDTH; i++) {
 				tower.get(0)[i].setDestroyed(true);
 			}
 		}
 		else if (tower.get(0)[0].isDestroyed() && tower.get(0)[0].getDestroyTimer() == 0) {
-			System.out.println("riemuf");
 			tower.remove(0);
 			diffCounter ++;
 			tower.add(new Brick[TOWER_WIDTH]);

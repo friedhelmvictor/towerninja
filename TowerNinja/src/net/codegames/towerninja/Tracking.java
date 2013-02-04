@@ -23,8 +23,8 @@ public class Tracking {
 	private Vector<Integer> actualUsers = new Vector<Integer>();
 	Vector<Player> players = new Vector<Player>();
 
-	private Color[] colors = { new Color(79, 12, 77), // violett
-			new Color(27, 64, 120), // blue
+	private Color[] colors = { new Color(27, 64, 120), // blue
+			new Color(79, 12, 77), // violet
 			new Color(45, 120, 33) // green
 	};
 
